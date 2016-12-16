@@ -1,0 +1,22 @@
+node_modules
+/build
+.DS_Store
+website/templates/website/liveReloadConf.html
+venv
+*.pyc
+*.zip
+*.sqlite3
+*.rdb
+.coverage
+local_settings.py
+static/
+libs/
+node_modules
+.cache
+coverage
+media/
+
+
+# Deploy settings
+
+deploy_settings.sh
