@@ -15,5 +15,6 @@ TEST_CHOICES = (
 
 class FrontendTest(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    url = models.URLField(max_length=400)
     test = models.CharField(max_length=3, choices=TEST_CHOICES)
     assertion = models.TextField()

@@ -3,6 +3,8 @@ node_modules
 .DS_Store
 website/templates/website/liveReloadConf.html
 venv
+*.log
+*.db
 *.pyc
 *.zip
 *.sqlite3
