@@ -7,6 +7,9 @@ class Project(models.Model):
     name = models.CharField(max_length=200)
     live_url = models.URLField(max_length=400)
 
+    def __str__(self):
+        return self.name
+
 
 TEST_CHOICES = (
     ('EQ', 'Is equal'),
