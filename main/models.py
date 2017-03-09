@@ -11,12 +11,29 @@ class Project(models.Model):
         return self.name
 
 
+class Report(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+
+    def notify(self):
+        pass
+
+    def __str__(self):
+        return self.date.strftime("%A, %d. %B %Y %I:%M%p")
+
+
 TEST_CHOICES = (
     ('EQ', 'Is equal'),
     ('NE', 'Not equal'),
     ('IN', 'Contains'),
     ('NI', 'Not contain'),
 )
+
+
+class FrontendTestException(Exception):
+    pass
+
 
 class FrontendTest(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -27,11 +44,16 @@ class FrontendTest(models.Model):
     def run(self):
         response = requests.get(self.url)
         text = response.text
-        if self.test == 'EQ':
-            assert text == self.assertion
-        if self.test == 'NE':
-            assert text != self.assertion
-        if self.test == 'IN':
-            assert self.assertion in text
-        if self.test == 'NI':
-            assert self.assertion not in text
+        try:
+            if self.test == 'EQ':
+                assert text == self.assertion
+            if self.test == 'NE':
+                assert text != self.assertion
+            if self.test == 'IN':
+                assert self.assertion in text
+            if self.test == 'NI':
+                assert self.assertion not in text
+        except AssertionError:
+            assertion_explain = '{0} {1} {2}'.format(self.assertion, self.test, text)
+            assertion_explain += '\n\n\n\n'
+            raise FrontendTestException(assertion_explain)
