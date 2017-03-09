@@ -1,11 +1,19 @@
 import requests
 
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from phonenumber_field.modelfields import PhoneNumberField
+
+
+class LotrekUser(AbstractUser):
+    phone_number = PhoneNumberField(blank=True, null=True)
 
 
 class Project(models.Model):
     name = models.CharField(max_length=200)
     live_url = models.URLField(max_length=400)
+    team = models.ManyToManyField(LotrekUser)
 
     def __str__(self):
         return self.name
