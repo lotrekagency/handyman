@@ -1,3 +1,4 @@
+django-phonenumber-field==1.2.0
 amqp==1.4.9
 anyjson==0.3.3
 asn1crypto==0.22.0
