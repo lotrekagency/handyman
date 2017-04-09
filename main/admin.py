@@ -19,12 +19,12 @@ class ProjectAdmin(admin.ModelAdmin):
     ]
     fieldsets = (
         (_('General'), {'fields': ('name', 'slug', 'live_url', 'team')}),
-        (_('Ssh'), {'fields': ('server', 'username', 'password')}),
-        (_('Backup'), {'fields': ('backup_archive', 'backup_script')}),
+        (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password')}),
+        (_('Backup'), {'fields': ('backup_archive', 'backup_script', 'backup_active')}),
     )
     readonly_fields = ('slug',)
     filter_horizontal = ('team',)
-    list_display = ('name', 'live_url')
+    list_display = ('name', 'live_url', 'backup_active')
 
 
 class ReportAdmin(admin.ModelAdmin):

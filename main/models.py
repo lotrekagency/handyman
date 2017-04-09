@@ -19,13 +19,14 @@ class Project(models.Model):
     team = models.ManyToManyField(LotrekUser)
 
     # SSH
-    server = models.CharField(max_length=200, null=True, blank=True)
-    username = models.CharField(max_length=200, null=True, blank=True)
-    password = models.CharField(max_length=200, null=True, blank=True)
+    server_address = models.CharField(max_length=200, null=True, blank=True)
+    ssh_username = models.CharField(max_length=200, null=True, blank=True)
+    ssh_password = models.CharField(max_length=200, null=True, blank=True)
 
     # BACKUP
     backup_archive = models.CharField(max_length=250, null=True, blank=True)
     backup_script = models.TextField(null=True, blank=True)
+    backup_active = models.BooleanField()
 
     def __str__(self):
         return self.name

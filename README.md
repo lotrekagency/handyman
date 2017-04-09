@@ -4,7 +4,7 @@ Markino is the best friend that can notify you is a server is down. Also it offe
 
 ## Features
 
-- Alarm system: it sends an sms if a server is down or someone changes some files in your app)
+- Alarm system: sends an sms if a server is down
 
-- Backup system: provides a periodic backup system of files and database
+- Backup system: provides a periodic backup system for files and database
 
