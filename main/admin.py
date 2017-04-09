@@ -1,11 +1,14 @@
 from django.contrib import admin
-from .models import Project, FrontendTest, Report, LotrekUser
-
+from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
+from .models import Project, FrontendTest, Report, LotrekUser
 
-class LotrekUserAdmin(admin.ModelAdmin):
-    model = LotrekUser
+
+class LotrekUserAdmin(UserAdmin):
+    fieldsets = ()
+    exclude = ('groups',)
+    readonly_fields = ('last_login', 'date_joined',)
 
 
 class FrontendTestInline(admin.TabularInline):
