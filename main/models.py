@@ -11,9 +11,20 @@ class LotrekUser(AbstractUser):
 
 
 class Project(models.Model):
+    # GENERAL
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200)
     live_url = models.URLField(max_length=400)
     team = models.ManyToManyField(LotrekUser)
+
+    # SSH
+    server = models.CharField(max_length=200, null=True, blank=True)
+    username = models.CharField(max_length=200, null=True, blank=True)
+    password = models.CharField(max_length=200, null=True, blank=True)
+
+    # BACKUP
+    backup_archive = models.CharField(max_length=250, null=True, blank=True)
+    backup_script = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
