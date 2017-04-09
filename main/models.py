@@ -6,6 +6,8 @@ from django.utils.text import slugify
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+from .exceptions import FrontendTestException
+
 
 class LotrekUser(AbstractUser):
     phone_number = PhoneNumberField(blank=True, null=True)
@@ -42,7 +44,7 @@ class Report(models.Model):
     text = models.TextField()
 
     def notify(self):
-        pass
+        print ('* A NEW REPORT! *')
 
     def __str__(self):
         return self.date.strftime("%A, %d. %B %Y %I:%M%p")
@@ -54,10 +56,6 @@ TEST_CHOICES = (
     ('IN', 'Contains'),
     ('NI', 'Not contain'),
 )
-
-
-class FrontendTestException(Exception):
-    pass
 
 
 class FrontendTest(models.Model):
