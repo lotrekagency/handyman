@@ -2,6 +2,7 @@ import requests
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.text import slugify
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -28,6 +29,10 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(getattr(self, 'name'))
+        super(Project, self).save(*args, **kwargs)
 
 
 class Report(models.Model):

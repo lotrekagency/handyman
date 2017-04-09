@@ -24,6 +24,7 @@ class ProjectAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('slug',)
     filter_horizontal = ('team',)
+    list_display = ('name', 'live_url')
 
 
 class ReportAdmin(admin.ModelAdmin):
