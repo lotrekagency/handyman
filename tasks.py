@@ -1,12 +1,11 @@
 from celery.decorators import periodic_task
 from celery.schedules import crontab
 
-from main.models import Project, FrontendTest, FrontendTestException, Report
 from main.backup import execute_backup
+from main.exceptions import BackupException, FrontendTestException
+from main.models import Project, FrontendTest, Report
 
 from django.conf import settings
-
-from .exceptions import *
 
 
 @periodic_task(bind=True, run_every=(crontab(**settings.TESTING_SCHEDULE)))
@@ -21,7 +20,7 @@ def test_websites(self):
             except FrontendTestException as ex:
                 report_text += '{0}\n'.format(ex)
         if report_text:
-            report = Report.objects.create(project=project, text=report_text)
+            report = Report.objects.create(class_type='TEST', project=project, text=report_text)
             report.notify()
 
 
@@ -37,6 +36,6 @@ def backup_websites(self):
                     project.backup_archive
                 )
             except BackupException as ex:
-                report_text += '{0}\n'.format(ex)
-                report = Report.objects.create(project=project, text=report_text)
+                report_text = '{0}\n'.format(ex)
+                report = Report.objects.create(class_type='BACK', project=project, text=report_text)
                 report.notify()

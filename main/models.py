@@ -38,16 +38,22 @@ class Project(models.Model):
         super(Project, self).save(*args, **kwargs)
 
 
+REPORT_TYPES = (
+    ('BACK', 'Backup'),
+    ('TEST', 'Testing'),
+)
+
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
+    class_type = models.CharField(max_length=4, choices=REPORT_TYPES)
 
     def notify(self):
         print ('* A NEW REPORT! *')
 
     def __str__(self):
-        return self.date.strftime("%A, %d. %B %Y %I:%M%p")
+        return self.date.strftime("[{0}] %A, %d. %B %Y %I:%M%p".format(self.class_type))
 
 
 TEST_CHOICES = (

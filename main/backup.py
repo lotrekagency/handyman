@@ -17,6 +17,7 @@ class SSHClient(paramiko.SSHClient):
 def execute_backup(project, server, username, password, script, backup_archive):
 
     try:
+        sftp = None
         ssh = SSHClient()
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
         ssh.connect(server, username=username, password=password)
@@ -41,8 +42,11 @@ def execute_backup(project, server, username, password, script, backup_archive):
             '{0}-{1}-backup.zip'.format(project, backuptime)
         )
         sftp.get(backup_archive, archive_file)
-    except SSHException as ex:
+    except paramiko.SSHException as ex:
+        raise BackupException(ex)
+    except OSError as ex:
         raise BackupException(ex)
     finally:
-        sftp.close()
+        if sftp:
+            sftp.close()
         ssh.close()
