@@ -1,9 +1,8 @@
 import os
 import paramiko
+
 from datetime import datetime
-
 from django.conf import settings
-
 from .exceptions import BackupException
 
 
@@ -14,11 +13,12 @@ class SSHClient(paramiko.SSHClient):
         return self.exec_command(command.strip(';'))
 
 
-def execute_backup(project, server, username, password, script, backup_archive):
+def execute_backup(project, server, username, password, script, backup_archive, sync_folders):
 
     try:
         sftp = None
         ssh = SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
         ssh.connect(server, username=username, password=password)
         stdin, stdout, stderr = ssh.exec_commands(*script.split('\r\n'))
@@ -42,6 +42,14 @@ def execute_backup(project, server, username, password, script, backup_archive):
             '{0}-{1}-backup.zip'.format(project, backuptime)
         )
         sftp.get(backup_archive, archive_file)
+        if sync_folders:
+            for folder in sync_folders.split('\r\n'):
+                command_sync = 'sshpass -p "{0}" rsync -avz {1}@{2}:{3} {4}'.format(
+                    password, username, server, folder,
+                    os.path.join(settings.BACKUP_PATH, project)
+                )
+                os.system(command_sync)
+
     except paramiko.SSHException as ex:
         raise BackupException(ex)
     except OSError as ex:

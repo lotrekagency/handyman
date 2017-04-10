@@ -33,7 +33,7 @@ def backup_websites(self):
                 execute_backup(
                     project.slug, project.server_address, project.ssh_username,
                     project.ssh_password, project.backup_script,
-                    project.backup_archive
+                    project.backup_archive, project.backup_sync_folders
                 )
             except BackupException as ex:
                 report_text = '{0}\n'.format(ex)

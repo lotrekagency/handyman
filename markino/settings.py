@@ -144,14 +144,14 @@ TESTING_SCHEDULE = {
     'day_of_week' : '*'
 }
 
-
 # Backup
 
 BACKUP_FOLDER = 'backup'
+
 # BACKUP_SCHEDULE = {
-#     'hour' : 18,
-#     'minute' : 10
+#     'hour' : '13, 20',
 # }
+
 BACKUP_SCHEDULE = {
     'hour' : '*',
     'minute' : '*',

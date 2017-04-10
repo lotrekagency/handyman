@@ -23,7 +23,7 @@ class ProjectAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('General'), {'fields': ('name', 'slug', 'live_url', 'team')}),
         (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password')}),
-        (_('Backup'), {'fields': ('backup_archive', 'backup_script', 'backup_active')}),
+        (_('Backup'), {'fields': ('backup_active', 'backup_archive', 'backup_script', 'backup_sync_folders')}),
     )
     readonly_fields = ('slug',)
     filter_horizontal = ('team',)

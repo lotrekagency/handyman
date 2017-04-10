@@ -26,6 +26,7 @@ class Project(models.Model):
     ssh_password = models.CharField(max_length=200, null=True, blank=True)
 
     # BACKUP
+    backup_sync_folders = models.TextField(null=True, blank=True)
     backup_archive = models.CharField(max_length=250, null=True, blank=True)
     backup_script = models.TextField(null=True, blank=True)
     backup_active = models.BooleanField()
