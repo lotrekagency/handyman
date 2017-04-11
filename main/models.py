@@ -13,17 +13,31 @@ class LotrekUser(AbstractUser):
     phone_number = PhoneNumberField(blank=True, null=True)
 
 
+class Reseller(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
+class Machine(models.Model):
+    name = models.CharField(max_length=200)
+    server_address = models.CharField(max_length=200, null=True, blank=True)
+    ssh_username = models.CharField(max_length=200, null=True, blank=True)
+    ssh_password = models.CharField(max_length=200, null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    reseller = models.ForeignKey(Reseller, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
     # GENERAL
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     live_url = models.URLField(max_length=400)
     team = models.ManyToManyField(LotrekUser)
-
-    # SSH
-    server_address = models.CharField(max_length=200, null=True, blank=True)
-    ssh_username = models.CharField(max_length=200, null=True, blank=True)
-    ssh_password = models.CharField(max_length=200, null=True, blank=True)
+    machine = models.ForeignKey(Machine, null=True, blank=True)
 
     # BACKUP
     backup_sync_folders = models.TextField(null=True, blank=True)

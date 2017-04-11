@@ -26,14 +26,18 @@ def test_websites(self):
 
 @periodic_task(bind=True, run_every=(crontab(**settings.BACKUP_SCHEDULE)))
 def backup_websites(self):
-    projects = Project.objects.all()
+    projects = Project.objects.select_related('machine').all()
     for project in projects:
-        if project.backup_active:
+        if project.backup_active and project.machine:
             try:
                 execute_backup(
-                    project.slug, project.server_address, project.ssh_username,
-                    project.ssh_password, project.backup_script,
-                    project.backup_archive, project.backup_sync_folders
+                    project.slug,
+                    project.machine.server_address,
+                    project.machine.ssh_username,
+                    project.machine.ssh_password,
+                    project.backup_script,
+                    project.backup_archive,
+                    project.backup_sync_folders
                 )
             except BackupException as ex:
                 report_text = '{0}\n'.format(ex)
