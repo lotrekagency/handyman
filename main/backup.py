@@ -15,8 +15,10 @@ class SSHClient(paramiko.SSHClient):
 
 def execute_backup(project, server, username, password, script, backup_archive, sync_folders):
 
+    sftp = None
+    ssh = None
+
     try:
-        sftp = None
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
@@ -44,17 +46,16 @@ def execute_backup(project, server, username, password, script, backup_archive, 
         sftp.get(backup_archive, archive_file)
         if sync_folders:
             for folder in sync_folders.split('\r\n'):
-                command_sync = 'sshpass -p "{0}" rsync -avz {1}@{2}:{3} {4}'.format(
+                command_sync = 'sshpass -p "{0}" rsync -avv {1}@{2}:{3} {4}'.format(
                     password, username, server, folder,
                     os.path.join(settings.BACKUP_PATH, project)
                 )
                 os.system(command_sync)
 
-    except paramiko.SSHException as ex:
-        raise BackupException(ex)
-    except OSError as ex:
+    except Exception as ex:
         raise BackupException(ex)
     finally:
         if sftp:
             sftp.close()
-        ssh.close()
+        if ssh:
+            ssh.close()

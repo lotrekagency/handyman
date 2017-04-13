@@ -157,4 +157,5 @@ BACKUP_SCHEDULE = {
     'minute' : '*',
     'day_of_week' : '*'
 }
+
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
