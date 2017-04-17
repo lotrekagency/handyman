@@ -1,5 +1,6 @@
 import os
 import paramiko
+import time
 
 from datetime import datetime
 from django.conf import settings
@@ -44,6 +45,10 @@ def execute_backup(project, server, username, password, script, backup_archive, 
             '{0}-{1}-backup.zip'.format(project, backuptime)
         )
         sftp.get(backup_archive, archive_file)
+        if ssh:
+            ssh.close()
+            ssh = None
+        time.sleep(2)
         if sync_folders:
             for folder in sync_folders.split('\r\n'):
                 command_sync = 'sshpass -p "{0}" rsync -avv {1}@{2}:{3} {4}'.format(
