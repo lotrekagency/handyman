@@ -18,7 +18,9 @@ node_modules
 coverage
 media/
 
+backup/
 
 # Deploy settings
 
 deploy_settings.sh
+*.pid

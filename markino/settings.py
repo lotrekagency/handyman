@@ -111,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Rome'
 
 USE_I18N = True
 
@@ -136,9 +136,26 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-## Worker settings
-CELERYD_CONCURRENCY = 1
-CELERYD_TASK_TIME_LIMIT = 20
-CELERYD_LOG_FILE = 'celeryd.log'
-CELERYD_LOG_LEVEL = 'INFO'
+# Testing
 
+TESTING_SCHEDULE = {
+    'hour' : '*',
+    'minute' : '*',
+    'day_of_week' : '*'
+}
+
+# Backup
+
+BACKUP_FOLDER = 'backup'
+
+# BACKUP_SCHEDULE = {
+#     'hour' : '13, 20',
+# }
+
+BACKUP_SCHEDULE = {
+    'hour' : '*',
+    'minute' : '*',
+    'day_of_week' : '*'
+}
+
+BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
