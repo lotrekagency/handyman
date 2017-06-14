@@ -90,8 +90,8 @@ class Report(models.Model):
             server.sendmail('email@gmail.com', to, self.text)
         except:
             print('Error while sending, task arrested')
-
-    def clean(self):
+            
+    def save(self):
         users = LotrekUser.objects.filter(project=self.project)
 
         phone_addr = []
@@ -101,7 +101,13 @@ class Report(models.Model):
             phone_addr.append(user.phone_number)
             email_addr.append(user.email)
 
-        self.send_mail(email_addr)
+        send_mass_mail(
+            'Report',
+            self.text,
+            'example@xample.com',
+            email_addr,
+            )
+
         self.send_sms(phone_addr)
 
     def __str__(self):
