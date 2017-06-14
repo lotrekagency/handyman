@@ -1,6 +1,7 @@
 import requests
 
 from django.contrib.auth.models import AbstractUser
+
 from django.db import models
 from django.utils.text import slugify
 
@@ -8,8 +9,16 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from .exceptions import FrontendTestException
 
+from twilio.rest import Client
+
+import smtplib
+
+from email.mime.text import MIMEText
+
 
 class LotrekUser(AbstractUser):
+    twilio_account = models.CharField(max_length=20, blank=True, null=True)
+    twilio_token = models.CharField(max_length=20, blank=True, null=True)
     phone_number = PhoneNumberField(blank=True, null=True)
 
 
@@ -59,13 +68,41 @@ REPORT_TYPES = (
 )
 
 class Report(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
-    text = models.TextField()
-    class_type = models.CharField(max_length=4, choices=REPORT_TYPES)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    text = models.TextField(blank=True, null=True)
+    class_type = models.CharField(max_length=4, choices=REPORT_TYPES, blank=True, null=True)
 
     def notify(self):
         print ('* A NEW REPORT! *')
+
+    def send_sms(self, to=[]):
+        client = Client('ACdb1b5f26c8aed5cc39461306a9c700da', '58a3e10ef80d19f88692342d87bc4e97')
+
+        for num in to:
+            client.messages.create(to=num, from_='+393493084105', body=self.text)
+
+    def send_mail(self, from_, to=[]):
+        try:
+            server = smtplib.SMTP('smtp.gmail.com') # TO DEFINE
+            server.starttls()
+            server.login('email@gmail.com', 'password123') # TO CREATE
+            server.sendmail('email@gmail.com', to, self.text)
+        except:
+            print('Error while sending, task arrested')
+
+    def clean(self):
+        users = LotrekUser.objects.filter(project=self.project)
+
+        phone_addr = []
+        email_addr = []
+
+        for user in users:
+            phone_addr.append(user.phone_number)
+            email_addr.append(user.email)
+
+        self.send_mail(email_addr)
+        self.send_sms(phone_addr)
 
     def __str__(self):
         return self.date.strftime("[{0}] %A, %d. %B %Y %I:%M%p".format(self.class_type))
