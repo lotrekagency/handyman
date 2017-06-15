@@ -3,6 +3,7 @@ import requests
 from django.contrib.auth.models import AbstractUser
 
 from django.db import models
+from django.core.mail import send_mass_mail
 from django.utils.text import slugify
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -11,14 +12,10 @@ from .exceptions import FrontendTestException
 
 from twilio.rest import Client
 
-import smtplib
-
-from email.mime.text import MIMEText
-
 
 class LotrekUser(AbstractUser):
-    twilio_account = models.CharField(max_length=20, blank=True, null=True)
-    twilio_token = models.CharField(max_length=20, blank=True, null=True)
+    twilio_account = models.CharField(max_length=20, blank=True, null=True) # NEEDS MORE THAN 20 CHARACTERS
+    twilio_token = models.CharField(max_length=20, blank=True, null=True) # NEEDS MORE THAN 20 CHARACTERS
     phone_number = PhoneNumberField(blank=True, null=True)
 
 
@@ -82,16 +79,7 @@ class Report(models.Model):
         for num in to:
             client.messages.create(to=num, from_='+393493084105', body=self.text)
 
-    def send_mail(self, from_, to=[]):
-        try:
-            server = smtplib.SMTP('smtp.gmail.com') # TO DEFINE
-            server.starttls()
-            server.login('email@gmail.com', 'password123') # TO CREATE
-            server.sendmail('email@gmail.com', to, self.text)
-        except:
-            print('Error while sending, task arrested')
-            
-    def save(self):
+    def save(self, *args, **kwargs):
         users = LotrekUser.objects.filter(project=self.project)
 
         phone_addr = []
@@ -101,14 +89,17 @@ class Report(models.Model):
             phone_addr.append(user.phone_number)
             email_addr.append(user.email)
 
+        print(email_addr)
+
         send_mass_mail(
             'Report',
             self.text,
             'example@xample.com',
             email_addr,
             )
-
         self.send_sms(phone_addr)
+
+        super(Report, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.date.strftime("[{0}] %A, %d. %B %Y %I:%M%p".format(self.class_type))
