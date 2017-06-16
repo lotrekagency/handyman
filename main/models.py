@@ -3,7 +3,7 @@ import requests
 from django.contrib.auth.models import AbstractUser
 
 from django.db import models
-from django.core.mail import send_mass_mail
+from django.core.mail import send_mail
 from django.utils.text import slugify
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -14,9 +14,7 @@ from twilio.rest import Client
 
 
 class LotrekUser(AbstractUser):
-    twilio_account = models.CharField(max_length=20, blank=True, null=True) # NEEDS MORE THAN 20 CHARACTERS
-    twilio_token = models.CharField(max_length=20, blank=True, null=True) # NEEDS MORE THAN 20 CHARACTERS
-    phone_number = PhoneNumberField(blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
 
 class Reseller(models.Model):
@@ -77,33 +75,30 @@ class Report(models.Model):
         client = Client('ACdb1b5f26c8aed5cc39461306a9c700da', '58a3e10ef80d19f88692342d87bc4e97')
 
         for num in to:
-            client.messages.create(to=num, from_='+393493084105', body=self.text)
+            client.messages.create(to=num, from_='+14158422892', body=self.text)
 
     def save(self, *args, **kwargs):
         users = LotrekUser.objects.filter(project=self.project)
 
-        phone_addr = []
-        email_addr = []
+        phone_nums = []
 
         for user in users:
-            phone_addr.append(user.phone_number)
-            email_addr.append(user.email)
+            phone_nums.append(user.phone_number)
 
-        print(email_addr)
-
-        send_mass_mail(
+        send_mail(
             'Report',
             self.text,
             'example@xample.com',
-            email_addr,
+            [user.email for user in users],
+            fail_silently=False,
             )
-        self.send_sms(phone_addr)
+        self.send_sms(phone_nums)
 
         super(Report, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.date.strftime("[{0}] %A, %d. %B %Y %I:%M%p".format(self.class_type))
-
+        
 
 TEST_CHOICES = (
     ('EQ', 'Is equal'),

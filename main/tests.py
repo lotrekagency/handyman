@@ -11,6 +11,7 @@ class ReportTest(TestCase):
 			first_name='Marco',
 			last_name='Bianchi',
 			email='info@marco.it',
+			phone_number='+393493084105',
 		)
 		
 		Project.objects.create(
@@ -26,7 +27,7 @@ class ReportTest(TestCase):
 		)
 
 	def test_notify(self):
-		project = Projects.objects.get(id__iexact=1)
+		project = Project.objects.get(id__iexact=1)
 		project.team.add(LotrekUser.objects.get(id__iexact=1))
 		report = Report.objects.get(id__iexact=1)
 		report.save()

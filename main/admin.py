@@ -28,9 +28,17 @@ class MachineAdmin(admin.ModelAdmin):
     list_display = ('name', 'server_address', 'reseller', 'end_time')
 
 
+class ReportInline(admin.TabularInline):
+    model = Report
+    extra = 1
+
+    readonly_fields = ('project', 'date', 'text', 'class_type',)
+
+
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         FrontendTestInline,
+        ReportInline,
     ]
     fieldsets = (
         (_('General'), {'fields': ('name', 'slug', 'live_url', 'team', 'machine')}),
