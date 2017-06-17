@@ -6,6 +6,7 @@ from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller
 
 
 class LotrekUserAdmin(UserAdmin):
+    actions = []
     fieldsets = ()
     exclude = ('groups',)
     readonly_fields = ('last_login', 'date_joined',)

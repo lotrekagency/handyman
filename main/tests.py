@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from .models import LotrekUser, Project, Report
+from django.core.mail import send_mail
 
 
 class ReportTest(TestCase):
@@ -10,7 +11,7 @@ class ReportTest(TestCase):
 			username='Marchino',
 			first_name='Marco',
 			last_name='Bianchi',
-			email='info@marco.it',
+			email='lorenzodantonio1995@gmail.com',
 			phone_number='+393493084105',
 		)
 		

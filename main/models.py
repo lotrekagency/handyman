@@ -84,12 +84,14 @@ class Report(models.Model):
 
         for user in users:
             phone_nums.append(user.phone_number)
+            print([user.email for user in users])
 
         send_mail(
             'Report',
             self.text,
-            'example@xample.com',
-            [user.email for user in users],
+            'lorenzodantonio1995@gmail.com',
+            ['lorenzodantonio1995@gmail.com'],
+            #[user.email for user in users],
             fail_silently=False,
             )
         self.send_sms(phone_nums)
