@@ -1,9 +1,15 @@
+import time
+
 import requests
 
 from django.contrib.auth.models import AbstractUser
 
 from django.db import models
+
+from django.conf import settings
+
 from django.core.mail import send_mail
+
 from django.utils.text import slugify
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -72,10 +78,11 @@ class Report(models.Model):
         print ('* A NEW REPORT! *')
 
     def send_sms(self, to=[]):
-        client = Client('ACdb1b5f26c8aed5cc39461306a9c700da', '58a3e10ef80d19f88692342d87bc4e97')
+        client = Client(settings.TWILIO_ACCOUNT, settings.TWILIO_TOKEN)
 
         for num in to:
-            client.messages.create(to=num, from_='+14158422892', body=self.text)
+            client.messages.create(to=num, from_=settings.TWILIO_PHONE, body=self.text)
+            time.sleep(2)
 
     def save(self, *args, **kwargs):
         users = LotrekUser.objects.filter(project=self.project)
@@ -89,9 +96,8 @@ class Report(models.Model):
         send_mail(
             'Report',
             self.text,
-            'lorenzodantonio1995@gmail.com',
-            ['lorenzodantonio1995@gmail.com'],
-            #[user.email for user in users],
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email for user in users],
             fail_silently=False,
             )
         self.send_sms(phone_nums)

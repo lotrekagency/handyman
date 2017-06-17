@@ -31,6 +31,21 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# Twilio settings
+TWILIO_ACCOUNT = 'ACdb1b5f26c8aed5cc39461306a9c700da'
+TWILIO_TOKEN = '58a3e10ef80d19f88692342d87bc4e97'
+TWILIO_PHONE = '+14158422892'
+
+# Email settings
+DEFAULT_FROM_EMAIL = 'email@email.com'
+SERVER_EMAIL = 'email@email.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'email@gmail.com'
+EMAIL_HOST_PASSWORD = 'emailpassword'
+
+
 # Application definition
 
 INSTALLED_APPS = [
