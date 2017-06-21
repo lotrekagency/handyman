@@ -1,6 +1,8 @@
 from django.test import TestCase
 
-from .models import LotrekUser, Project, Report
+from .models import LotrekUser, Project, Report, FrontendTest
+from .exceptions import FrontendTestException
+
 from django.core.mail import send_mail
 
 from unittest.mock import *
@@ -8,7 +10,7 @@ from unittest.mock import *
 
 class ReportTest(TestCase):
     def setUp(self):
-        LotrekUser.objects.create(
+        lotrek_user = LotrekUser.objects.create(
             id=1,
             username='Marchino',
             first_name='Marco',
@@ -17,22 +19,74 @@ class ReportTest(TestCase):
             phone_number='+393493084105',
         )
 
-        Project.objects.create(
+        test_project = Project.objects.create(
             id=1,
             name='Example Project',
             live_url='http://www.google.com',
             backup_active=True,
             )
 
-        Report.objects.create(
+        test_report = Report.objects.create(
             project=Project.objects.get(id__iexact=1),
             text='example report content',
         )
 
-        self.test_project = Project.objects.get(id__iexact=1)
-        self.test_users = LotrekUser.objects.filter(project=self.test_project)
-        self.test_phone = [user.phone_number for user in self.test_users]
+        test_project.team.add(lotrek_user)
+        self.test_report = test_report
+        self.test_users = LotrekUser.objects.filter(project__in=[test_project])
+
+        self.test_phone = []
+        self.test_email = []
+
+        for user in self.test_users:
+            self.test_email.append(user.email)
+            self.test_phone.append(user.phone_number)
+
 
     @patch('main.models.Report.send_sms')
-    def test_notify(self, mock_send_sms):
+    @patch('main.models.send_mail')
+    def test_notify(self, mock_send_mail, mock_send_sms):
+        self.test_report.save()
+        mock_send_mail.assert_called_with('Report', 'example report content', 'email@email.com', self.test_email, fail_silently=False)
         mock_send_sms.assert_called_with(self.test_phone)
+
+
+class Response:
+
+    def __init__(self, response):
+        self._response = response
+
+    @property
+    def text(self):
+        return self._response
+
+
+class FrontendTestTest(TestCase):
+
+    def setUp(self):
+
+        test_project = Project.objects.create(
+            id=1,
+            name='Example Project',
+            live_url='http://www.google.com',
+            backup_active=True,
+            )
+
+        self.test = FrontendTest.objects.create(
+            id=1,
+            project = test_project,
+            url=test_project.live_url,
+            test='IN',
+            assertion='Google',
+        )
+
+    @patch('main.models.requests.get')
+    def test_test(self, mock_request):
+        mock_request.return_value = Response('Google')
+        self.test.run()
+
+    @patch('main.models.requests.get')
+    def test_test_not_pass(self, mock_request):
+        mock_request.return_value = Response('ASD')
+        with self.assertRaises(FrontendTestException):
+            self.test.run()
