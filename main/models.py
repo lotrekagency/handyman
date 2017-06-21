@@ -91,7 +91,6 @@ class Report(models.Model):
 
         for user in users:
             phone_nums.append(user.phone_number)
-            print([user.email for user in users])
 
         send_mail(
             'Report',
@@ -106,7 +105,7 @@ class Report(models.Model):
 
     def __str__(self):
         return self.date.strftime("[{0}] %A, %d. %B %Y %I:%M%p".format(self.class_type))
-        
+
 
 TEST_CHOICES = (
     ('EQ', 'Is equal'),
