@@ -2,6 +2,8 @@ import time
 
 import requests
 
+from django.core.urlresolvers import reverse
+
 from django.contrib.auth.models import AbstractUser
 
 from django.db import models
@@ -75,31 +77,35 @@ class Report(models.Model):
     class_type = models.CharField(max_length=4, choices=REPORT_TYPES, blank=True, null=True)
 
     def notify(self):
-        print ('* A NEW REPORT! *')
 
-    def send_sms(self, to=[]):
+        url = '127.0'
+        url = reverse('admin:main_report_change', args=[self.id])
+
+        sms_body = 'Report at: {}'.format(url)
+        email_body = 'Report at: <a href="{0}">{0}</a>'.format(url)
+
+        users = LotrekUser.objects.filter(project=self.project)
         client = Client(settings.TWILIO_ACCOUNT, settings.TWILIO_TOKEN)
 
-        for num in to:
-            client.messages.create(to=num, from_=settings.TWILIO_PHONE, body=self.text)
-            time.sleep(2)
+        for user in users:
+            try:
+                client.messages.create(to=user.phone_number, from_=settings.TWILIO_PHONE, body=sms_body)
+
+                send_mail(
+                    'Report',
+                    email_body,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    fail_silently=True,
+                )
+
+            except Exception:
+                print('Failed while contacting {0}'.format(user.username))
+
+            time.sleep(1)
 
     def save(self, *args, **kwargs):
-        users = LotrekUser.objects.filter(project=self.project)
-
-        phone_nums = []
-
-        for user in users:
-            phone_nums.append(user.phone_number)
-
-        send_mail(
-            'Report',
-            self.text,
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email for user in users],
-            fail_silently=False,
-            )
-        self.send_sms(phone_nums)
+        self.notify()
 
         super(Report, self).save(*args, **kwargs)
 

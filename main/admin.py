@@ -52,7 +52,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'project', 'class_type')
-    readonly_fields = ('project', 'date', 'text', 'class_type')
+    #readonly_fields = ('project', 'date', 'text', 'class_type')
 
 
 admin.site.register(Project, ProjectAdmin)

@@ -37,13 +37,13 @@ TWILIO_TOKEN = '58a3e10ef80d19f88692342d87bc4e97'
 TWILIO_PHONE = '+14158422892'
 
 # Email settings
-DEFAULT_FROM_EMAIL = 'email@email.com'
-SERVER_EMAIL = 'email@email.com'
+DEFAULT_FROM_EMAIL = 'lorenzodantonio1995@gmail.com'
+SERVER_EMAIL = 'lorenzodantonio1995@gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'email@gmail.com'
-EMAIL_HOST_PASSWORD = 'emailpassword'
+EMAIL_HOST_USER = 'lorenzodantonio1995@gmail.com'
+EMAIL_HOST_PASSWORD = 'goog135pass!'
 
 
 # Application definition
