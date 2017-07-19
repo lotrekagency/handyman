@@ -1,4 +1,6 @@
 import os
+import json
+import requests
 
 from celery.decorators import periodic_task
 from celery.schedules import crontab
@@ -8,6 +10,8 @@ from main.exceptions import BackupException, FrontendTestException
 from main.models import Project, FrontendTest, Report
 
 from django.conf import settings
+
+from .ibs import ibs_api
 
 
 def test_project(project):
@@ -41,6 +45,18 @@ def backup_project(project):
             report.notify()
 
 
+def test_domain(domain):
+    url = IBS(api_key='testapi', api_pwd='testpass', domain='lotrek.it').info()
+    response = json.loads(requests.get(url))
+    
+    try:
+        pass
+    except:
+        pass
+
+
+
+
 @periodic_task(
     bind=True,
     run_every=(crontab(**settings.TESTING_SCHEDULE)),
@@ -65,3 +81,14 @@ def backup_projects(self):
     projects = Project.objects.select_related('machine').all()
     for project in projects:
         backup_project(project)
+
+@periodic_task(
+    bind=True,
+    run_every=(crontab(**settings.TESTING_SCHEDULE)),
+    default_retry_delay=30, max_retries=3,
+    soft_time_limit=500
+)
+def test_projects(self):
+    domains = [
+        test_domain(project.domain) for project in Project.objects.all()
+        ]    

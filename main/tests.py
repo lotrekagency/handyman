@@ -3,6 +3,8 @@ from django.test import TestCase
 from .models import LotrekUser, Project, Report, FrontendTest
 from .exceptions import FrontendTestException
 
+from django.conf import settings
+
 from django.core.mail import send_mail
 
 from unittest.mock import *
@@ -47,7 +49,7 @@ class ReportTest(TestCase):
     @patch('main.models.send_mail')
     def test_notify(self, mock_send_mail, mock_send_sms):
         self.test_report.save()
-        mock_send_mail.assert_called_with('Report', 'example report content', 'lorenzodantonio1995@gmail.com', self.test_email, fail_silently=False)
+        mock_send_mail.assert_called_with('Report', 'example report content', settings.DEFAULT_FROM_EMAIL, self.test_email, fail_silently=False)
         mock_send_sms.assert_called_with(self.test_phone)
 
 

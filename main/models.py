@@ -48,6 +48,7 @@ class Project(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     live_url = models.URLField(max_length=400)
+    domain = models.CharField(max_length=200)
     team = models.ManyToManyField(LotrekUser)
     machine = models.ForeignKey(Machine, null=True, blank=True)
 
@@ -68,6 +69,7 @@ class Project(models.Model):
 REPORT_TYPES = (
     ('BACK', 'Backup'),
     ('TEST', 'Testing'),
+    ('I.BS', 'Domain Error')
 )
 
 class Report(models.Model):
@@ -105,8 +107,6 @@ class Report(models.Model):
             time.sleep(1)
 
     def save(self, *args, **kwargs):
-        self.notify()
-
         super(Report, self).save(*args, **kwargs)
 
     def __str__(self):

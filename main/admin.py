@@ -42,7 +42,7 @@ class ProjectAdmin(admin.ModelAdmin):
         ReportInline,
     ]
     fieldsets = (
-        (_('General'), {'fields': ('name', 'slug', 'live_url', 'team', 'machine')}),
+        (_('General'), {'fields': ('name', 'slug', 'live_url', 'domain', 'team', 'machine')}),
         (_('Backup'), {'fields': ('backup_active', 'backup_archive', 'backup_script', 'backup_sync_folders')}),
     )
     readonly_fields = ('slug',)
