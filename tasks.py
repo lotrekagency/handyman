@@ -60,31 +60,36 @@ def test_domain(domain):
     domain_status = response['domainstatus']
     message = '' # response['message']
 
-    try:
-        expiration = (response['expirationdate'].split('/'))
-        expiration_date = datetime.date(
-            int(expiration[0]),
-            int(expiration[1]),
-            int(expiration[2]),
-        )
-
-        today_date = datetime.date.today()
-
-        days_to_expiration = expiration_date - today_date
-
-        if days_to_expiration <= 0:
-            message = 'Domain {0} expired'.format(domain)
-
-        elif days_to_expiration <= 30:
-            message = '{0} days to {1} epiration'.format(days_to_expiration, domain)
-        else:
-            print('{0}: OK'.format(domain))
-
-
-    except:
-        message = 'Cannot verify domain {0}'.format(domain)
+    if domain_status == 'EXPIRED':
+        message = 'Domain {0} expired'.format(domain)
         report = Report.objects.create(class_type='I.BS', project=project, text=message)
         report.notify()
+
+    else:
+        try:
+            expiration = (response['expirationdate'].split('/'))
+            expiration_date = datetime.date(
+                int(expiration[0]),
+                int(expiration[1]),
+                int(expiration[2]),
+            )
+
+            today_date = datetime.date.today()
+
+            days_to_expiration = expiration_date - today_date
+
+            if days_to_expiration <= 30:
+                message = '{0} days to {1} expiration'.format(days_to_expiration, domain)
+                report = Report.objects.create(class_type='I.BS', project=project, text=message)
+                report.notify()
+
+            else:
+                print('{0}: OK'.format(domain))
+
+        except:
+            message = 'Cannot verify domain {0}'.format(domain)
+            report = Report.objects.create(class_type='I.BS', project=project, text=message)
+            report.notify()
 
 
 @periodic_task(
