@@ -36,6 +36,14 @@ TWILIO_ACCOUNT = 'ACdb1b5f26c8aed5cc39461306a9c700da'
 TWILIO_TOKEN = '58a3e10ef80d19f88692342d87bc4e97'
 TWILIO_PHONE = '+14158422892'
 
+
+# Internet.bs API
+IBS_BASE_URL = 'https://testapi.internet.bs/Domain/'
+IBS_KEY = 'testapi'
+IBS_PWD = 'testpass'
+IBS_DEFAULT_FORMAT = 'JSON'
+
+
 # Email settings
 DEFAULT_FROM_EMAIL = 'lorenzodantonio1995@gmail.com'
 SERVER_EMAIL = 'lorenzodantonio1995@gmail.com'

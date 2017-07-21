@@ -1,6 +1,6 @@
 import os
-import json
 import requests
+from datetime import datetime
 
 from celery.decorators import periodic_task
 from celery.schedules import crontab
@@ -11,7 +11,7 @@ from main.models import Project, FrontendTest, Report
 
 from django.conf import settings
 
-from .ibs import ibs_api
+#from .ibs import ibs_api
 
 
 def test_project(project):
@@ -46,22 +46,52 @@ def backup_project(project):
 
 
 def test_domain(domain):
-    url = IBS(api_key='testapi', api_pwd='testpass', domain='lotrek.it').info()
-    response = json.loads(requests.get(url))
-    
+    url = '{0}/Info?ApiKey={1}&Password={2}&Domain={3}&ResponseFormat={4}'.format(
+        settings.IBS_BASE_URL,
+        settings.IBS_API_KEY,
+        settings.IBS_API_PWD,
+        domain,
+        settings.IBS_DEFAULT_FORMAT,
+    )
+
+    response = requests.post(url).json()
+
+    status = response['status']
+    domain_status = response['domainstatus']
+    message = '' # response['message']
+
     try:
-        pass
+        expiration = (response['expirationdate'].split('/'))
+        expiration_date = datetime.date(
+            int(expiration[0]),
+            int(expiration[1]),
+            int(expiration[2]),
+        )
+
+        today_date = datetime.date.today()
+
+        days_to_expiration = expiration_date - today_date
+
+        if days_to_expiration <= 0:
+            message = 'Domain {0} expired'.format(domain)
+
+        elif days_to_expiration <= 30:
+            message = '{0} days to {1} epiration'.format(days_to_expiration, domain)
+        else:
+            print('{0}: OK'.format(domain))
+
+
     except:
-        pass
-
-
+        message = 'Cannot verify domain {0}'.format(domain)
+        report = Report.objects.create(class_type='I.BS', project=project, text=message)
+        report.notify()
 
 
 @periodic_task(
     bind=True,
     run_every=(crontab(**settings.TESTING_SCHEDULE)),
     default_retry_delay=30, max_retries=3,
-    soft_time_limit=500
+    soft_time_limit=500,
 )
 def test_projects(self):
     projects = Project.objects.all()
@@ -88,7 +118,5 @@ def backup_projects(self):
     default_retry_delay=30, max_retries=3,
     soft_time_limit=500
 )
-def test_projects(self):
-    domains = [
-        test_domain(project.domain) for project in Project.objects.all()
-        ]    
+def test_domains(self):
+    domains = [test_domain(project.domain) for project in Project.objects.all()]

@@ -26,7 +26,7 @@ class ReportTest(TestCase):
             name='Example Project',
             live_url='http://www.google.com',
             backup_active=True,
-            )
+        )
 
         test_report = Report.objects.create(
             project=Project.objects.get(id__iexact=1),
@@ -36,21 +36,6 @@ class ReportTest(TestCase):
         test_project.team.add(lotrek_user)
         self.test_report = test_report
         self.test_users = LotrekUser.objects.filter(project__in=[test_project])
-
-        self.test_phone = []
-        self.test_email = []
-
-        for user in self.test_users:
-            self.test_email.append(user.email)
-            self.test_phone.append(user.phone_number)
-
-
-    @patch('main.models.Report.send_sms')
-    @patch('main.models.send_mail')
-    def test_notify(self, mock_send_mail, mock_send_sms):
-        self.test_report.save()
-        mock_send_mail.assert_called_with('Report', 'example report content', settings.DEFAULT_FROM_EMAIL, self.test_email, fail_silently=False)
-        mock_send_sms.assert_called_with(self.test_phone)
 
 
 class Response:
