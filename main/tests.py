@@ -9,6 +9,8 @@ from django.core.mail import send_mail
 
 from unittest.mock import *
 
+from tasks import *
+
 
 class ReportTest(TestCase):
     def setUp(self):
@@ -25,8 +27,11 @@ class ReportTest(TestCase):
             id=1,
             name='Example Project',
             live_url='http://www.google.com',
+            domain='google.com',
             backup_active=True,
         )
+
+        test_project.team.add(lotrek_user)
 
         test_report = Report.objects.create(
             project=Project.objects.get(id__iexact=1),
