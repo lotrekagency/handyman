@@ -86,8 +86,8 @@ class Report(models.Model):
         url = '127.0'
         url = reverse('admin:main_report_change', args=[self.id])
 
-        sms_body = 'Report at: {}'.format(url)
-        email_body = 'Report at: <a href="{0}">{0}</a>'.format(url)
+        sms_body = 'Report at: {0}. DESCRIPTION: {1}'.format(url, self.message)
+        email_body = 'Report at: <a href="{0}">{0}</a> DESCRIPTION: {1}'.format(url, self.message)
 
         users = LotrekUser.objects.filter(project=self.project)
         client = Client(settings.TWILIO_ACCOUNT, settings.TWILIO_TOKEN)
