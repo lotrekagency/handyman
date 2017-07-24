@@ -48,7 +48,6 @@ class Project(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     live_url = models.URLField(max_length=400)
-    domain = models.CharField(max_length=200)
     team = models.ManyToManyField(LotrekUser)
     machine = models.ForeignKey(Machine, null=True, blank=True)
 
@@ -57,6 +56,10 @@ class Project(models.Model):
     backup_archive = models.CharField(max_length=250, null=True, blank=True)
     backup_script = models.TextField(null=True, blank=True)
     backup_active = models.BooleanField()
+
+    # INTERNET.BS
+    domain = models.CharField(max_length=200)
+    managed = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return self.name

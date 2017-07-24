@@ -124,4 +124,4 @@ def backup_projects(self):
     soft_time_limit=500
 )
 def test_domains(self):
-    domains = [test_domain(project.domain) for project in Project.objects.all()]
+    domains = [test_domain(project.domain) for project in Project.objects.filter(managed=False)]
