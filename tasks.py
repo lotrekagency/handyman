@@ -64,6 +64,7 @@ def test_domain(project):
         message = 'Domain {0} expired'.format(domain)
         report = Report.objects.create(class_type='I.BS', project=project, text=message)
         report.notify()
+        project.managed = False
 
     else:
         try:
@@ -82,6 +83,7 @@ def test_domain(project):
                 message = '{0} days to {1} expiration'.format(days_to_expiration, domain)
                 report = Report.objects.create(class_type='I.BS', project=project, text=message)
                 report.notify()
+                project.managed = False
 
             else:
                 print('{0}: OK'.format(domain))
@@ -90,6 +92,7 @@ def test_domain(project):
             message = 'Cannot verify domain {0}'.format(domain)
             report = Report.objects.create(class_type='I.BS', project=project, text=message)
             report.notify()
+            project.managed = False
 
 
 @periodic_task(

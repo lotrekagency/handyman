@@ -48,6 +48,7 @@ class ProjectAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('slug',)
     filter_horizontal = ('team',)
+    list_filter = ('managed', 'backup_active',)
     list_display = ('name', 'live_url', 'backup_active', 'machine', 'domain', 'managed',)
     list_editable = ('managed',)
 
