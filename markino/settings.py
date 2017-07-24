@@ -40,8 +40,8 @@ TWILIO_PHONE = '+14158422892'
 
 # Internet.bs API
 IBS_BASE_URL = 'https://testapi.internet.bs/Domain/'
-IBS_KEY = 'testapi'
-IBS_PWD = 'testpass'
+IBS_API_KEY = 'testapi'
+IBS_API_PWD = 'testpass'
 IBS_DEFAULT_FORMAT = 'JSON'
 
 

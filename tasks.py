@@ -11,7 +11,7 @@ from main.models import Project, FrontendTest, Report
 
 from django.conf import settings
 
-#from .ibs import ibs_api
+from main.models import Report, Project, LotrekUser
 
 
 def test_project(project):
@@ -45,12 +45,12 @@ def backup_project(project):
             report.notify()
 
 
-def test_domain(domain):
+def test_domain(project):
     url = '{0}/Info?ApiKey={1}&Password={2}&Domain={3}&ResponseFormat={4}'.format(
         settings.IBS_BASE_URL,
         settings.IBS_API_KEY,
         settings.IBS_API_PWD,
-        domain,
+        project.domain,
         settings.IBS_DEFAULT_FORMAT,
     )
 
@@ -78,7 +78,7 @@ def test_domain(domain):
 
             days_to_expiration = expiration_date - today_date
 
-            if days_to_expiration <= 30:
+            if days_to_expiration <= datetime.timedelta(30):
                 message = '{0} days to {1} expiration'.format(days_to_expiration, domain)
                 report = Report.objects.create(class_type='I.BS', project=project, text=message)
                 report.notify()
