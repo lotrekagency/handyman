@@ -46,7 +46,7 @@ def backup_project(project):
 
 
 def test_domain(project):
-    url = '{0}/Info?ApiKey={1}&Password={2}&Domain={3}&ResponseFormat={4}'.format(
+    url = '{0}Info?ApiKey={1}&Password={2}&Domain={3}&ResponseFormat={4}'.format(
         settings.IBS_BASE_URL,
         settings.IBS_API_KEY,
         settings.IBS_API_PWD,
@@ -54,7 +54,9 @@ def test_domain(project):
         settings.IBS_DEFAULT_FORMAT,
     )
 
-    response = requests.post(url).json()
+    print ('before request {0}'.format(url))
+
+    response = requests.get(url, timeout=6).json()
 
     status = response['status']
     domain_status = response['domainstatus']
