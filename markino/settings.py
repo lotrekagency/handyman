@@ -183,3 +183,8 @@ BACKUP_SCHEDULE = {
 }
 
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
+
+try:
+    os.makedirs(BACKUP_PATH)
+except OSError:
+    print('Directory: {0} already exists!'.format(BACKUP_PATH))
