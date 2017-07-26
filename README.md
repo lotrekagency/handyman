@@ -8,6 +8,29 @@ Markino is the best friend that can notify you is a server is down. Also it offe
 
 - Backup system: provides a periodic backup system for data and files
 
+
+## Install SSHPass on youy system
+
+- Debian-base:
+	$ sudo apt-get install sshpass
+
+- RHEL/CentOS Linux
+	$ sudo yum install sshpass
+
+- Fedora
+	$ sudo dnf install sshpass
+
+- Arch Linux
+	$ sudo pacman -S sshpass
+
+- OpenSUSE
+	$ sudo zypper install sshpass
+
+- FreeBSD
+	$ cd /usr/ports/security/sshpass/ && make install clean
+	$ pkg install sshpass
+
+
 ## Use Celery
 
 To start celery
@@ -31,3 +54,7 @@ To backup a specific project run
 To test a specific project run
 
     $ python manage.py test_project my_project_slug
+
+To test a specific domain run
+	
+	$ python manage.py test_domain my_project_slug
