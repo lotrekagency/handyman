@@ -54,9 +54,11 @@ def test_domain(project):
         settings.IBS_DEFAULT_FORMAT,
     )
 
-    print ('before request {0}'.format(url))
-
-    response = requests.get(url, timeout=6).json()
+    try:
+        response = requests.get(url, timeout=6).json()
+    except requests.exceptions.RequestException as ex:
+        print(ex)
+        return
 
     status = response['status']
     domain_status = response['domainstatus']
