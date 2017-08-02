@@ -56,13 +56,19 @@ def test_domain(project):
 
     try:
         response = requests.get(url, timeout=6).json()
+        status = response['status']
+        message = response['message']
+
+        if status == 'FAILURE':
+            print(message)
+            return
+
     except requests.exceptions.RequestException as ex:
         print(ex)
         return
 
     status = response['status']
     domain_status = response['domainstatus']
-    message = '' # response['message']
 
     if domain_status == 'EXPIRED':
         message = 'Domain {0} expired'.format(domain)
