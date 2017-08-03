@@ -1,6 +1,6 @@
 import os
 import requests
-from datetime import datetime
+import datetime
 
 from celery.decorators import periodic_task
 from celery.schedules import crontab
@@ -46,21 +46,22 @@ def backup_project(project):
 
 
 def test_domain(project):
+    domain = project.domain
+
     url = '{0}Info?ApiKey={1}&Password={2}&Domain={3}&ResponseFormat={4}'.format(
         settings.IBS_BASE_URL,
         settings.IBS_API_KEY,
         settings.IBS_API_PWD,
-        project.domain,
+        domain,
         settings.IBS_DEFAULT_FORMAT,
     )
 
     try:
-        response = requests.get(url, timeout=6).json()
+        response = requests.get(url, timeout=10).json()
         status = response['status']
-        message = response['message']
 
         if status == 'FAILURE':
-            print(message)
+            print(status)
             return
 
     except requests.exceptions.RequestException as ex:
@@ -79,30 +80,35 @@ def test_domain(project):
     else:
         try:
             expiration = (response['expirationdate'].split('/'))
-            expiration_date = datetime.date(
-                int(expiration[0]),
-                int(expiration[1]),
-                int(expiration[2]),
-            )
-
-            today_date = datetime.date.today()
-
-            days_to_expiration = expiration_date - today_date
-
-            if days_to_expiration <= datetime.timedelta(30):
-                message = '{0} days to {1} expiration'.format(days_to_expiration, domain)
-                report = Report.objects.create(class_type='I.BS', project=project, text=message)
-                report.notify()
-                project.managed = False
-
-            else:
-                print('{0}: OK'.format(domain))
-
-        except:
-            message = 'Cannot verify domain {0}'.format(domain)
+        except Exception as ex:
+            message = 'Cannot verify domain {0}. EXCEPTION: {1}'.format(domain, ex)
             report = Report.objects.create(class_type='I.BS', project=project, text=message)
             report.notify()
             project.managed = False
+            print(ex, message)
+
+        expire_year = int(expiration[0])
+        expire_month = int(expiration[1])
+        expire_day = int(expiration[2])
+
+        expiration_date = datetime.date(
+            expire_year,
+            expire_month,
+            expire_day,
+        )
+
+        today_date = datetime.date.today()
+
+        days_to_expiration = expiration_date - today_date
+
+        if days_to_expiration <= datetime.timedelta(30):
+            message = '{0} days to {1} expiration'.format(days_to_expiration, domain)
+            report = Report.objects.create(class_type='I.BS', project=project, text=message)
+            report.notify()
+            project.managed = False
+
+        else:
+            print('(domain={0}, expiration date={1}) OK'.format(domain, expiration_date))
 
 
 @periodic_task(

@@ -39,20 +39,20 @@ TWILIO_PHONE = '+14158422892'
 
 
 # Internet.bs API
-IBS_BASE_URL = 'https://testapi.internet.bs/Domain/'
-IBS_API_KEY = 'testapi'
-IBS_API_PWD = 'testpass'
+IBS_BASE_URL = 'https://api.internet.bs/Domain/'
+IBS_API_KEY = 'apikey0123'
+IBS_API_PWD = 'apipass123'
 IBS_DEFAULT_FORMAT = 'JSON'
 
 
 # Email settings
-DEFAULT_FROM_EMAIL = 'lorenzodantonio1995@gmail.com'
-SERVER_EMAIL = 'lorenzodantonio1995@gmail.com'
+DEFAULT_FROM_EMAIL = 'mail@mail.com'
+SERVER_EMAIL = 'mail@mail.com'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.host.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'lorenzodantonio1995@gmail.com'
-EMAIL_HOST_PASSWORD = 'goog135pass!'
+EMAIL_HOST_USER = 'mail@mail.com'
+EMAIL_HOST_PASSWORD = 'pass'
 
 
 # Application definition
