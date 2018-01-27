@@ -6,6 +6,7 @@ from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller
 
 
 class LotrekUserAdmin(UserAdmin):
+    actions = []
     fieldsets = ()
     exclude = ('groups',)
     readonly_fields = ('last_login', 'date_joined',)
@@ -28,22 +29,33 @@ class MachineAdmin(admin.ModelAdmin):
     list_display = ('name', 'server_address', 'reseller', 'end_time')
 
 
+class ReportInline(admin.TabularInline):
+    model = Report
+    extra = 1
+
+    readonly_fields = ('project', 'date', 'text', 'class_type',)
+
+
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         FrontendTestInline,
+        ReportInline,
     ]
     fieldsets = (
         (_('General'), {'fields': ('name', 'slug', 'live_url', 'team', 'machine')}),
+        (_('internet.bs'), {'fields': ('domain', 'managed')}),
         (_('Backup'), {'fields': ('backup_active', 'backup_archive', 'backup_script', 'backup_sync_folders')}),
     )
     readonly_fields = ('slug',)
     filter_horizontal = ('team',)
-    list_display = ('name', 'live_url', 'backup_active', 'machine')
+    list_filter = ('managed', 'backup_active',)
+    list_display = ('name', 'live_url', 'backup_active', 'machine', 'domain', 'managed',)
+    list_editable = ('managed',)
 
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'project', 'class_type')
-    readonly_fields = ('project', 'date', 'text', 'class_type')
+    #readonly_fields = ('project', 'date', 'text', 'class_type')
 
 
 admin.site.register(Project, ProjectAdmin)

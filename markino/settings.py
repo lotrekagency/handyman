@@ -15,6 +15,7 @@ import os
 import djcelery
 djcelery.setup_loader()
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,6 +30,29 @@ SECRET_KEY = '^^fcxc^*g^r(*nc3=xun0u5m(b@q5p2i#_mn)$c51cc4c+b6ot'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+# Twilio settings
+TWILIO_ACCOUNT = 'ACdb1b5f26c8aed5cc39461306a9c700da'
+TWILIO_TOKEN = '58a3e10ef80d19f88692342d87bc4e97'
+TWILIO_PHONE = '+14158422892'
+
+
+# Internet.bs API
+IBS_BASE_URL = 'https://api.internet.bs/Domain/'
+IBS_API_KEY = 'apikey0123'
+IBS_API_PWD = 'apipass123'
+IBS_DEFAULT_FORMAT = 'JSON'
+
+
+# Email settings
+DEFAULT_FROM_EMAIL = 'mail@mail.com'
+SERVER_EMAIL = 'mail@mail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.host.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mail@mail.com'
+EMAIL_HOST_PASSWORD = 'pass'
 
 
 # Application definition
@@ -60,7 +84,7 @@ ROOT_URLCONF = 'markino.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -159,3 +183,8 @@ BACKUP_SCHEDULE = {
 }
 
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
+
+try:
+    os.makedirs(BACKUP_PATH)
+except OSError:
+    print('Directory: {0} already exists!'.format(BACKUP_PATH))
