@@ -57,10 +57,6 @@ class Project(models.Model):
     backup_script = models.TextField(null=True, blank=True)
     backup_active = models.BooleanField()
 
-    # INTERNET.BS
-    domain = models.CharField(max_length=200)
-    managed = models.BooleanField(default=False, blank=True)
-
     def __str__(self):
         return self.name
 

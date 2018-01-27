@@ -39,18 +39,15 @@ class ReportInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         FrontendTestInline,
-        ReportInline,
     ]
     fieldsets = (
         (_('General'), {'fields': ('name', 'slug', 'live_url', 'team', 'machine')}),
-        (_('internet.bs'), {'fields': ('domain', 'managed')}),
         (_('Backup'), {'fields': ('backup_active', 'backup_archive', 'backup_script', 'backup_sync_folders')}),
     )
     readonly_fields = ('slug',)
     filter_horizontal = ('team',)
-    list_filter = ('managed', 'backup_active',)
-    list_display = ('name', 'live_url', 'backup_active', 'machine', 'domain', 'managed',)
-    list_editable = ('managed',)
+    list_filter = ('backup_active',)
+    list_display = ('name', 'live_url', 'backup_active', 'machine',)
 
 
 class ReportAdmin(admin.ModelAdmin):
