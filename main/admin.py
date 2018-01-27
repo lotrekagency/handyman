@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller
+from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline
 
 
 class LotrekUserAdmin(UserAdmin):
@@ -21,6 +21,11 @@ class ResellerAdmin(admin.ModelAdmin):
     pass
 
 
+class DeadlineInline(admin.TabularInline):
+    model = Deadline
+    extra = 1
+
+
 class MachineAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('General'), {'fields': ('name', 'reseller', 'end_time')}),
@@ -29,16 +34,10 @@ class MachineAdmin(admin.ModelAdmin):
     list_display = ('name', 'server_address', 'reseller', 'end_time')
 
 
-class ReportInline(admin.TabularInline):
-    model = Report
-    extra = 1
-
-    readonly_fields = ('project', 'date', 'text', 'class_type',)
-
-
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         FrontendTestInline,
+        DeadlineInline
     ]
     fieldsets = (
         (_('General'), {'fields': ('name', 'slug', 'live_url', 'team', 'machine')}),

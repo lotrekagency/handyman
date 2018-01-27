@@ -37,11 +37,12 @@ class Machine(models.Model):
     server_address = models.CharField(max_length=200, null=True, blank=True)
     ssh_username = models.CharField(max_length=200, null=True, blank=True)
     ssh_password = models.CharField(max_length=200, null=True, blank=True)
-    end_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateField(null=True, blank=True)
     reseller = models.ForeignKey(Reseller, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
 
 class Project(models.Model):
     # GENERAL
@@ -142,3 +143,19 @@ class FrontendTest(models.Model):
             assertion_explain = '{0} {1} {2}'.format(self.assertion, self.test, text)
             assertion_explain += '\n\n\n\n'
             raise FrontendTestException(assertion_explain)
+
+
+DEADLINE_TYPES = (
+    ('DOM', 'Domain'),
+    ('CERT', 'Certificate'),
+    ('OTHR', 'Other')
+)
+
+class Deadline(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    dead_type = models.CharField(max_length=4, choices=DEADLINE_TYPES, default='OTHR')
+    notes = models.TextField(null=True, blank=True)
+    end_time = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return self.dead_type

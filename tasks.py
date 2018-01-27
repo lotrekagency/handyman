@@ -11,7 +11,7 @@ from main.models import Project, FrontendTest, Report
 
 from django.conf import settings
 
-from main.models import Report, Project, LotrekUser
+from main.models import Report, Project, LotrekUser, Deadline   
 
 
 def test_project(project):
@@ -45,71 +45,12 @@ def backup_project(project):
             report.notify()
 
 
-def test_domain(project):
-    domain = project.domain
-
-    url = '{0}Info?ApiKey={1}&Password={2}&Domain={3}&ResponseFormat={4}'.format(
-        settings.IBS_BASE_URL,
-        settings.IBS_API_KEY,
-        settings.IBS_API_PWD,
-        domain,
-        settings.IBS_DEFAULT_FORMAT,
-    )
-
-    try:
-        response = requests.get(url, timeout=10).json()
-        status = response['status']
-
-        if status == 'FAILURE':
-            print(status)
-            return
-
-    except requests.exceptions.RequestException as ex:
-        print(ex)
-        return
-
-    status = response['status']
-    domain_status = response['domainstatus']
-
-    if domain_status == 'EXPIRED':
-        message = 'Domain {0} expired'.format(domain)
-        report = Report.objects.create(class_type='I.BS', project=project, text=message)
-        report.notify()
-        project.managed = False
-
-    else:
-        try:
-            expiration = (response['expirationdate'].split('/'))
-        except Exception as ex:
-            message = 'Cannot verify domain {0}. EXCEPTION: {1}'.format(domain, ex)
-            report = Report.objects.create(class_type='I.BS', project=project, text=message)
-            report.notify()
-            project.managed = False
-            print(ex, message)
-
-        expire_year = int(expiration[0])
-        expire_month = int(expiration[1])
-        expire_day = int(expiration[2])
-
-        expiration_date = datetime.date(
-            expire_year,
-            expire_month,
-            expire_day,
-        )
-
-        today_date = datetime.date.today()
-
-        days_to_expiration = expiration_date - today_date
-
-        if days_to_expiration <= datetime.timedelta(30):
-            message = '{0} days to {1} expiration'.format(days_to_expiration, domain)
-            report = Report.objects.create(class_type='I.BS', project=project, text=message)
-            report.notify()
-            project.managed = False
-
-        else:
-            print('(domain={0}, expiration date={1}) OK'.format(domain, expiration_date))
-
+def check_deadlines(project):
+    deadlines = Deadline.objects.all()
+    today = datetime.date.today()
+    for deadline in deadlines:
+        if deadline.end_time - datetime.timedelta(days=7) < today < deadline.end_time:
+            print ('SCADE!')
 
 @periodic_task(
     bind=True,
@@ -135,12 +76,3 @@ def backup_projects(self):
     projects = Project.objects.select_related('machine').all()
     for project in projects:
         backup_project(project)
-
-@periodic_task(
-    bind=True,
-    run_every=(crontab(**settings.TESTING_SCHEDULE)),
-    default_retry_delay=30, max_retries=3,
-    soft_time_limit=500
-)
-def test_domains(self):
-    domains = [test_domain(project.domain) for project in Project.objects.filter(managed=False)]

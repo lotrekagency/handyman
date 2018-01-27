@@ -1,4 +1,4 @@
-from tasks import test_domain
+from tasks import check_deadlines
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -7,7 +7,7 @@ from main.models import Project
 
 class Command(BaseCommand):
 
-    help = 'Test a specific domain'
+    help = 'check deadlines for a specific project'
 
     def add_arguments(self, parser):
         parser.add_argument('slug', type=str)
@@ -16,9 +16,9 @@ class Command(BaseCommand):
         slug = options['slug']
         try:
             project = Project.objects.get(slug=slug)
-            test_domain(project)
+            check_deadlines(project)
             self.stdout.write(self.style.SUCCESS(
-                'Test completed for domain "{0}"'.format(slug)
+                'All deadlines checked for "{0}"'.format(slug)
             ))
         except Project.DoesNotExist:
             self.stdout.write(self.style.ERROR(
