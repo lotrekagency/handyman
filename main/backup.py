@@ -24,6 +24,7 @@ def execute_backup(project, server, username, password, script, backup_archive, 
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
         ssh.connect(server, username=username, password=password)
+        print (script.split('\r\n'))
         stdin, stdout, stderr = ssh.exec_commands(*script.split('\r\n'))
         exit_status = stderr.channel.recv_exit_status()
 
@@ -56,6 +57,12 @@ def execute_backup(project, server, username, password, script, backup_archive, 
                     os.path.join(settings.BACKUP_PATH, project)
                 )
                 os.system(command_sync)
+
+        command_zip_folder = 'zip -r {0}.zip {1}'.format(
+            os.path.join(settings.BACKUP_PATH, project),
+            os.path.join(settings.BACKUP_PATH, project)
+        )
+        os.system(command_zip_folder)
 
     except Exception as ex:
         raise BackupException(ex)
