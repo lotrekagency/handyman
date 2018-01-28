@@ -11,7 +11,7 @@ from main.models import Project, FrontendTest, Report
 
 from django.conf import settings
 
-from main.models import Report, Project, LotrekUser, Deadline   
+from main.models import Report, Project, LotrekUser, Deadline, Machine
 
 
 def test_project(project):
@@ -45,11 +45,19 @@ def backup_project(project):
             report.notify()
 
 
+def check_machines_deadlines():
+    machines = Machine.objects.all()
+    today = datetime.date.today()
+    for machine in machines:
+        if machine.end_time and machine.end_time - datetime.timedelta(days=7) < today < machine.end_time:
+            print ('SCADE!')
+
+
 def check_deadlines(project):
-    deadlines = Deadline.objects.all()
+    deadlines = Deadline.objects.filter(project=project)
     today = datetime.date.today()
     for deadline in deadlines:
-        if deadline.end_time - datetime.timedelta(days=7) < today < deadline.end_time:
+        if deadline.end_time and deadline.end_time - datetime.timedelta(days=7) < today < deadline.end_time:
             print ('SCADE!')
 
 @periodic_task(
