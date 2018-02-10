@@ -1,4 +1,4 @@
-from tasks import test_project
+from main.tasks import test_project
 
 from django.core.management.base import BaseCommand, CommandError
 

@@ -1,4 +1,4 @@
-from tasks import check_machines_deadlines
+from main.tasks import check_machines_deadlines
 
 from django.core.management.base import BaseCommand, CommandError
 

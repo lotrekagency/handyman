@@ -1,4 +1,4 @@
-from tasks import backup_project
+from main.tasks import backup_project
 
 from django.core.management.base import BaseCommand, CommandError
 

@@ -2,8 +2,8 @@ import os
 import requests
 import datetime
 
-from celery.decorators import periodic_task
-from celery.schedules import crontab
+from huey import crontab
+from huey.contrib.djhuey import db_periodic_task, db_task
 
 from main.backup import execute_backup
 from main.exceptions import BackupException, FrontendTestException
@@ -60,11 +60,8 @@ def check_deadlines(project):
         if deadline.end_time and deadline.end_time - datetime.timedelta(days=7) < today < deadline.end_time:
             print ('SCADE!')
 
-@periodic_task(
-    bind=True,
-    run_every=(crontab(**settings.TESTING_SCHEDULE)),
-    default_retry_delay=30, max_retries=3,
-    soft_time_limit=500,
+@db_periodic_task(
+    crontab(**settings.TESTING_SCHEDULE)
 )
 def test_projects(self):
     projects = Project.objects.all()
@@ -72,15 +69,12 @@ def test_projects(self):
         test_project(project)
 
 
-@periodic_task(
-    bind=True,
-    run_every=(crontab(**settings.BACKUP_SCHEDULE)),
-    default_retry_delay=30, max_retries=3,
-    soft_time_limit=500
-)
-def backup_projects(self):
-    if not os.path.exists(settings.BACKUP_PATH):
-        os.makedirs(settings.BACKUP_PATH)
-    projects = Project.objects.select_related('machine').all()
-    for project in projects:
-        backup_project(project)
+# @db_periodic_task(
+#     crontab(**settings.BACKUP_SCHEDULE)
+# )
+# def backup_projects(self):
+#     if not os.path.exists(settings.BACKUP_PATH):
+#         os.makedirs(settings.BACKUP_PATH)
+#     projects = Project.objects.select_related('machine').all()
+#     for project in projects:
+#         backup_project(project)
