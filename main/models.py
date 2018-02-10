@@ -10,7 +10,7 @@ from django.db import models
 
 from django.conf import settings
 
-from django.core.mail import send_mail
+from djlotrek import send_mail
 
 from django.utils.text import slugify
 
@@ -80,34 +80,26 @@ class Report(models.Model):
 
     def notify(self):
 
-        url = '127.0'
         url = reverse('admin:main_report_change', args=[self.id])
+        users_emails = LotrekUser.objects.filter(project=self.project).values('email')
 
-        sms_body = 'Report at: {0}. DESCRIPTION: {1}'.format(url, self.text)
-        email_body = 'Report at: <a href="{0}">{0}</a> DESCRIPTION: {1}'.format(url, self.text)
+        try:
+            send_mail(
+                settings.DEFAULT_FROM_EMAIL, users_emails, 
+                '[Report {0}] Markino has a new Report'.format(self.pk), 
+                context={
+                    'link' : url,
+                    'description' : self.text
+                },
+                template_html='mails/report_mail.html', 
+                template_txt='mails/report_mail.txt',
+                fail_silently=settings.DEBUG,
+            )
+        except Exception as ex:
+            print (ex)
+            print('Failed while contacting {0}'.format(user.username))
 
-        users = LotrekUser.objects.filter(project=self.project)
-        client = Client(settings.TWILIO_ACCOUNT, settings.TWILIO_TOKEN)
-
-        for user in users:
-            try:
-                client.messages.create(to=user.phone_number, from_=settings.TWILIO_PHONE, body=sms_body)
-
-                send_mail(
-                    'Report',
-                    email_body,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    fail_silently=True,
-                )
-
-            except Exception:
-                print('Failed while contacting {0}'.format(user.username))
-
-            time.sleep(1)
-
-    def save(self, *args, **kwargs):
-        super(Report, self).save(*args, **kwargs)
+        time.sleep(1)
 
     def __str__(self):
         return self.date.strftime("[{0}] %A, %d. %B %Y %I:%M%p".format(self.class_type))

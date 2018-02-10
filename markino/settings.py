@@ -32,19 +32,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Twilio settings
-TWILIO_ACCOUNT = 'ACdb1b5f26c8aed5cc39461306a9c700da'
-TWILIO_TOKEN = '58a3e10ef80d19f88692342d87bc4e97'
-TWILIO_PHONE = '+14158422892'
-
-
-# Internet.bs API
-IBS_BASE_URL = 'https://api.internet.bs/Domain/'
-IBS_API_KEY = 'apikey0123'
-IBS_API_PWD = 'apipass123'
-IBS_DEFAULT_FORMAT = 'JSON'
-
-
 # Email settings
 DEFAULT_FROM_EMAIL = 'mail@mail.com'
 SERVER_EMAIL = 'mail@mail.com'
@@ -187,4 +174,4 @@ BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
 try:
     os.makedirs(BACKUP_PATH)
 except OSError:
-    print('Directory: {0} already exists!'.format(BACKUP_PATH))
+    print('Backup Directory: {0} already exists!'.format(BACKUP_PATH))
