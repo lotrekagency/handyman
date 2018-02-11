@@ -6,6 +6,6 @@ if [ "$1" = "stop" ]; then
 fi
 
 if [ "$1" = "start" ]; then
-    python manage.py run_huey --logfile huey_logs.log &
+    python manage.py run_huey --logfile markino.log &
     echo $! > huey.pid
 fi

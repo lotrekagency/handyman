@@ -1,12 +1,12 @@
 # Markino
 
-Markino is the best friend that can notify you is a server is down. Also it offers you backups and beer.
+Markino is the best friend for Lotrèk that can notify you if a server is down, custom scripts, backups and beer.
 
 ## Features
 
-- Alarm system: sends an sms and/or an email if the server is down or tests are failing
+- Alarm system: sends an email if the server is down or tests are failing
 
-- Backup system: provides a periodic backup system for data and files
+- Backup/script system: provides a periodic backup system for data and files and scripting
 
 
 ## Install SSHPass on youy system
@@ -31,19 +31,19 @@ Markino is the best friend that can notify you is a server is down. Also it offe
 	$ pkg install sshpass
 
 
-## Use Celery
+## Start Markino
 
-To start celery
+To start Markino use
 
-    $ ./celery.sh start
+    $ ./markino.sh start
 
-To stop celery
+To stop Markino
 
-    $ ./celery.sh stop
+    $ ./markino.sh stop
 
 You can find all the logs
 
-    $ tail -f celery_logs.log
+    $ tail -f markino.log
 
 ## Use command line
 
