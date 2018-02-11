@@ -8,28 +8,19 @@ Markino is the best friend for Lotrèk that can notify you if a server is down, 
 
 - Backup/script system: provides a periodic backup system for data and files and scripting
 
+## Install external software
 
-## Install SSHPass on youy system
+You need SSHPass and Redis running on your system
 
-- Debian-base:
-	$ sudo apt-get install sshpass
+## Install requirements
 
-- RHEL/CentOS Linux
-	$ sudo yum install sshpass
+	$ pip install -r requirements.txt
 
-- Fedora
-	$ sudo dnf install sshpass
+## Override settings
 
-- Arch Linux
-	$ sudo pacman -S sshpass
+Before starting Markino you may need to override settings: just create local_settings.py file inside markino folder.
 
-- OpenSUSE
-	$ sudo zypper install sshpass
-
-- FreeBSD
-	$ cd /usr/ports/security/sshpass/ && make install clean
-	$ pkg install sshpass
-
+	BACKUP_PATH = '/Volumes/EXT_DISK/markino_backup'
 
 ## Start Markino
 

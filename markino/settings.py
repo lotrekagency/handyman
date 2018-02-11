@@ -149,7 +149,7 @@ TESTING_SCHEDULE = {
 
 # Backup
 
-BACKUP_FOLDER = 'backup'
+BACKUP_FOLDER = 'backup_markino'
 
 # BACKUP_SCHEDULE = {
 #     'hour' : '13, 20',
@@ -162,11 +162,6 @@ BACKUP_SCHEDULE = {
 }
 
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
-
-try:
-    os.makedirs(BACKUP_PATH)
-except OSError:
-    print('Backup Directory: {0} already exists!'.format(BACKUP_PATH))
 
 HUEY = {
     'name': 'markinotaskrunner',  # The huey name.
@@ -201,3 +196,20 @@ HUEY = {
         'health_check_interval': 1,  # Check worker health every second.
     },
 }
+
+try:
+    from .local_settings import *
+except ImportError:
+    print ("\n\nWARNING: No local_settings.py found! Please look at the README.md file!\n\n")
+
+try:
+    from .deploy_settings import *
+    print ("\n\nSTART DEPLOYED APP!\n\n")
+except ImportError:
+    pass
+
+
+try:
+    os.makedirs(BACKUP_PATH)
+except OSError:
+    print('Backup Directory: {0} already exists!'.format(BACKUP_PATH))

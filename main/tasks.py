@@ -69,12 +69,12 @@ def test_projects(self):
         test_project(project)
 
 
-# @db_periodic_task(
-#     crontab(**settings.BACKUP_SCHEDULE)
-# )
-# def backup_projects(self):
-#     if not os.path.exists(settings.BACKUP_PATH):
-#         os.makedirs(settings.BACKUP_PATH)
-#     projects = Project.objects.select_related('machine').all()
-#     for project in projects:
-#         backup_project(project)
+@db_periodic_task(
+    crontab(**settings.BACKUP_SCHEDULE)
+)
+def backup_projects(self):
+    if not os.path.exists(settings.BACKUP_PATH):
+        os.makedirs(settings.BACKUP_PATH)
+    projects = Project.objects.select_related('machine').all()
+    for project in projects:
+        backup_project(project)

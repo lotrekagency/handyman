@@ -19,6 +19,7 @@ coverage
 media/
 
 backup/
+backup_markino/
 
 # Deploy settings
 
