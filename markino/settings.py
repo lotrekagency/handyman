@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
     'huey.contrib.djhuey',
+    'main',
     'phonenumber_field'
 ]
 

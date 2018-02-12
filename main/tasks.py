@@ -63,7 +63,7 @@ def check_deadlines(project):
 @db_periodic_task(
     crontab(**settings.TESTING_SCHEDULE)
 )
-def test_projects(self):
+def test_projects():
     projects = Project.objects.all()
     for project in projects:
         test_project(project)
@@ -72,7 +72,7 @@ def test_projects(self):
 @db_periodic_task(
     crontab(**settings.BACKUP_SCHEDULE)
 )
-def backup_projects(self):
+def backup_projects():
     if not os.path.exists(settings.BACKUP_PATH):
         os.makedirs(settings.BACKUP_PATH)
     projects = Project.objects.select_related('machine').all()
