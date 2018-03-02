@@ -25,6 +25,22 @@ class LotrekUser(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
 
 
+class Registar(models.Model):
+    name = models.CharField(max_length=200)
+    panel_registar = models.CharField(max_length=200, null=True, blank=True)
+    username_panel_registar = models.CharField(max_length=200, null=True, blank=True)
+    password_panel_registar = models.CharField(max_length=200, null=True, blank=True)
+    def __str__(self):
+        return self.name  
+        
+class Domain(models.Model):
+    name = models.CharField(max_length=200)
+    end_time = models.DateField(null=True, blank=True)
+    registar = models.ForeignKey(Registar, null=True, blank=True)
+    def __str__(self):
+        return self.name
+
+
 class Reseller(models.Model):
     name = models.CharField(max_length=200)
 
@@ -34,6 +50,7 @@ class Reseller(models.Model):
 
 class Machine(models.Model):
     name = models.CharField(max_length=200)
+    name_on_reseller = models.CharField(max_length=200)
     server_address = models.CharField(max_length=200, null=True, blank=True)
     ssh_username = models.CharField(max_length=200, null=True, blank=True)
     ssh_password = models.CharField(max_length=200, null=True, blank=True)
