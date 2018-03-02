@@ -4,4 +4,5 @@ from . import views
 
 
 urlpatterns = [
+       url(r'^domain/$', views.ProductList.as_view()),
 ]
