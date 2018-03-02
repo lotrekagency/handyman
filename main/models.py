@@ -39,7 +39,12 @@ class Machine(models.Model):
     ssh_password = models.CharField(max_length=200, null=True, blank=True)
     end_time = models.DateField(null=True, blank=True)
     reseller = models.ForeignKey(Reseller, null=True, blank=True)
-
+    reseller_panel = models.CharField(max_length=200, null=True, blank=True)
+    reseller_panel_username = models.CharField(max_length=200, null=True, blank=True)
+    reseller_panel_password = models.CharField(max_length=200, null=True, blank=True)
+    online_panel = models.CharField(max_length=200)
+    online_panel_username = models.CharField(max_length=200, null=True, blank=True)
+    online_panel_password = models.CharField(max_length=200, null=True, blank=True)
     def __str__(self):
         return self.name
 

@@ -28,8 +28,10 @@ class DeadlineInline(admin.TabularInline):
 
 class MachineAdmin(admin.ModelAdmin):
     fieldsets = (
-        (_('General'), {'fields': ('name', 'reseller', 'end_time')}),
+        (_('General'), {'fields': ('name', 'end_time')}),
+        (_('Reseller'), {'fields': ('reseller', 'reseller_panel', 'reseller_panel_username', 'reseller_panel_password')}),
         (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password')}),
+        (_('Online panel'), {'fields': ('online_panel', 'online_panel_username', 'online_panel_password')}),
     )
     list_display = ('name', 'server_address', 'reseller', 'end_time')
 
