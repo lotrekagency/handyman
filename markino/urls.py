@@ -17,15 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from main import views
 
-
-
 urlpatterns = [
-    #url(r'^', include(router.urls)),
-    url(r'^admin/', admin.site.urls),
+    url(r'^', admin.site.urls),
     url(r'^api/', include('main.urls')),
-    #url(r'^', admin.site.urls),
-   # url(r'^api/$', include(admin.urls)),
-    # url(r'^main/$', views.index, include('main.urls')),
-
-    #url(r'^api/', include(DomainViewSet))
 ]

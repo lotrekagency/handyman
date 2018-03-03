@@ -8,7 +8,11 @@ from .serializer import DomainSerializer
 
 
 class ProductList(APIView):
-    def get(self, request, format=None):
-        products = Domain.objects.all()
+    def get(self, request, id='', format=None):
+        if (id !='' ) :
+            products = Domain.objects.all().filter(id=id)
+        else  :     
+            products = Domain.objects.all()
         serializer = DomainSerializer(products, many=True)
         return Response(serializer.data)
+  
