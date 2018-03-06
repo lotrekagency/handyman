@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline, Domain, Registar
+from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline, Domain, Registar, Certificate, Certificateseller
 
 
 class LotrekUserAdmin(UserAdmin):
@@ -28,12 +28,12 @@ class DeadlineInline(admin.TabularInline):
 
 class MachineAdmin(admin.ModelAdmin):
     fieldsets = (
-        (_('General'), {'fields': ('name', 'name_on_reseller', 'end_time')}),
+        (_('General'), {'fields': ('name', 'name_on_reseller', 'end_time','root_permissions')}),
         (_('Reseller'), {'fields': ('reseller', 'reseller_panel', 'reseller_panel_username', 'reseller_panel_password')}),
         (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password')}),
         (_('Online panel'), {'fields': ('online_panel', 'online_panel_username', 'online_panel_password')}),
     )
-    list_display = ('name', 'server_address', 'reseller', 'end_time')
+    list_display = ('name', 'server_address', 'root_permissions', 'reseller', 'end_time')
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -58,9 +58,9 @@ class ReportAdmin(admin.ModelAdmin):
 class DomainAdmin(admin.ModelAdmin):
 
     fieldsets = (
-        (_('General'), {'fields': ('name', 'end_time','registar')}),
+        (_('General'), {'fields': ('name', 'end_time','own','registar')}),
     )
-    list_display = ('name', 'registar', 'end_time')
+    list_display = ('name', 'own','registar', 'end_time')
 
 class RegistarAdmin(admin.ModelAdmin):
 
@@ -69,6 +69,19 @@ class RegistarAdmin(admin.ModelAdmin):
     )
 
 
+class CertificateAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (_('General'), {'fields': ('name', 'end_time','seller')}),
+    )
+
+
+class CertificatesellerAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (_('General'), {'fields': ('name', 'panel_seller','username_panel_seller','password_panel_seller')}),
+    )
+
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Report, ReportAdmin)
 admin.site.register(LotrekUser, LotrekUserAdmin)
@@ -76,4 +89,6 @@ admin.site.register(Machine, MachineAdmin)
 admin.site.register(Reseller, ResellerAdmin)
 admin.site.register(Domain, DomainAdmin)
 admin.site.register(Registar, RegistarAdmin)
+admin.site.register(Certificate, CertificateAdmin)
+admin.site.register(Certificateseller, CertificatesellerAdmin)
 

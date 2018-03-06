@@ -34,9 +34,27 @@ class Registar(models.Model):
         return self.name  
         
 class Domain(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
     name = models.CharField(max_length=200)
     end_time = models.DateField(null=True, blank=True)
     registar = models.ForeignKey(Registar, null=True, blank=True)
+    own = models.NullBooleanField(choices=BOOL_CHOICES, null=True, blank=True)
+    def __str__(self):
+        return self.name
+
+
+class Certificateseller(models.Model):
+    name = models.CharField(max_length=200)
+    panel_seller = models.CharField(max_length=200, null=True, blank=True)
+    username_panel_seller = models.CharField(max_length=200, null=True, blank=True)
+    password_panel_seller = models.CharField(max_length=200, null=True, blank=True)
+    def __str__(self):
+        return self.name  
+        
+class Certificate(models.Model):
+    name = models.CharField(max_length=200)
+    end_time = models.DateField(null=True, blank=True)
+    seller = models.ForeignKey(Certificateseller, null=True, blank=True)
     def __str__(self):
         return self.name
 
@@ -48,7 +66,11 @@ class Reseller(models.Model):
         return self.name
 
 
+
+
 class Machine(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+
     name = models.CharField(max_length=200)
     name_on_reseller = models.CharField(max_length=200)
     server_address = models.CharField(max_length=200, null=True, blank=True)
@@ -62,6 +84,7 @@ class Machine(models.Model):
     online_panel = models.CharField(max_length=200)
     online_panel_username = models.CharField(max_length=200, null=True, blank=True)
     online_panel_password = models.CharField(max_length=200, null=True, blank=True)
+    root_permissions =  models.BooleanField(choices=BOOL_CHOICES,  default=False)
     def __str__(self):
         return self.name
 
