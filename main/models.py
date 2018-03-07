@@ -51,6 +51,7 @@ class Domain(models.Model):
     registar = models.ForeignKey(Registar, null=True, blank=True)
     registrant = models.ForeignKey(Domainregistrant, null=True, blank=True)
     own = models.NullBooleanField(choices=BOOL_CHOICES, null=True, blank=True)
+    to_renew = models.NullBooleanField(choices=BOOL_CHOICES, default=True)
     def __str__(self):
         return self.name
 
@@ -97,6 +98,7 @@ class Machine(models.Model):
     online_panel_username = models.CharField(max_length=200, null=True, blank=True)
     online_panel_password = models.CharField(max_length=200, null=True, blank=True)
     root_permissions =  models.BooleanField(choices=BOOL_CHOICES,  default=False)
+    management_contract  =  models.BooleanField(choices=BOOL_CHOICES,  default=True)
     def __str__(self):
         return self.name
 

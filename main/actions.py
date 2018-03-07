@@ -1,6 +1,6 @@
 import csv
 from django.http import HttpResponse
-
+import os
 
 
 
@@ -34,9 +34,6 @@ def export_as_csv_action(description="Export selected objects as CSV file", fiel
         if header:
             writer.writerow(list(field_names))
         for obj in queryset:
-           # writer.writerow([unicode(getattr(obj, field)).encode("utf-8","replace") for field in field_names])
-            # obj=str(obj)
-            # writer.writerow([obj.encode("utf-8","replace") for field in field_names])
             row = [getattr(obj, field)() if callable(getattr(obj, field)) else getattr(obj, field) for field in field_names]
             writer.writerow(row)
         return response
