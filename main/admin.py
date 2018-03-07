@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline, Domain, Registar, Certificate, Certificateseller
+from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline, Domain, Registar, Certificate, Certificateseller, Domainregistrant
+
+from .actions import export_as_csv_action
 
 
 class LotrekUserAdmin(UserAdmin):
@@ -55,12 +57,30 @@ class ReportAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'project', 'class_type')
     #readonly_fields = ('project', 'date', 'text', 'class_type')
 
+def export_products(self, request, queryset):
+    meta = {
+            'file': '/tmp/products.csv',
+            'queryset': queryset,
+            'fields': ('name','price')
+        }
+    return get_model_as_csv_file_response(meta, content_type='text/csv')
+export_products.short_description = 'Export as csv'
+
+
+class DomainregistrantAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (_('General'), {'fields': ('name','email')}),
+    )
+    #readonly_fields = ('project', 'date', 'text', 'class_type')    
+
 class DomainAdmin(admin.ModelAdmin):
 
     fieldsets = (
-        (_('General'), {'fields': ('name', 'end_time','own','registar')}),
+        (_('General'), {'fields': ('name', 'price','end_time','own','registar','registrant')}),
     )
-    list_display = ('name', 'own','registar', 'end_time')
+    list_filter = ('registrant',)
+    list_display = ('name', 'own','price','registar','registrant', 'end_time')
+    actions = [export_as_csv_action("CSV Export", fields=['name','price'])]
 
 class RegistarAdmin(admin.ModelAdmin):
 
@@ -91,4 +111,5 @@ admin.site.register(Domain, DomainAdmin)
 admin.site.register(Registar, RegistarAdmin)
 admin.site.register(Certificate, CertificateAdmin)
 admin.site.register(Certificateseller, CertificatesellerAdmin)
+admin.site.register(Domainregistrant, DomainregistrantAdmin)
 
