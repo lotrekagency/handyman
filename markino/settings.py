@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'huey.contrib.djhuey',
-    'phonenumber_field'
+    'phonenumber_field',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

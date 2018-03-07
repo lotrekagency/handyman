@@ -20,9 +20,56 @@ from .exceptions import FrontendTestException
 
 from twilio.rest import Client
 
+import csv
+
+from django.http import HttpResponse
+
 
 class LotrekUser(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
+
+
+class Registar(models.Model):
+    name = models.CharField(max_length=200)
+    panel_registar = models.CharField(max_length=200, null=True, blank=True)
+    username_panel_registar = models.CharField(max_length=200, null=True, blank=True)
+    password_panel_registar = models.CharField(max_length=200, null=True, blank=True)
+    def __str__(self):
+        return self.name  
+        
+class Domainregistrant(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=200,null=True, blank=True)
+    def __str__(self):
+        return self.name  
+
+class Domain(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+    name = models.CharField(max_length=200)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    end_time = models.DateField(null=True, blank=True)
+    registar = models.ForeignKey(Registar, null=True, blank=True)
+    registrant = models.ForeignKey(Domainregistrant, null=True, blank=True)
+    own = models.NullBooleanField(choices=BOOL_CHOICES, null=True, blank=True)
+    to_renew = models.NullBooleanField(choices=BOOL_CHOICES, default=True)
+    def __str__(self):
+        return self.name
+
+
+class Certificateseller(models.Model):
+    name = models.CharField(max_length=200)
+    panel_seller = models.CharField(max_length=200, null=True, blank=True)
+    username_panel_seller = models.CharField(max_length=200, null=True, blank=True)
+    password_panel_seller = models.CharField(max_length=200, null=True, blank=True)
+    def __str__(self):
+        return self.name  
+        
+class Certificate(models.Model):
+    name = models.CharField(max_length=200)
+    end_time = models.DateField(null=True, blank=True)
+    seller = models.ForeignKey(Certificateseller, null=True, blank=True)
+    def __str__(self):
+        return self.name
 
 
 class Reseller(models.Model):
@@ -32,14 +79,26 @@ class Reseller(models.Model):
         return self.name
 
 
+
+
 class Machine(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+
     name = models.CharField(max_length=200)
+    name_on_reseller = models.CharField(max_length=200)
     server_address = models.CharField(max_length=200, null=True, blank=True)
     ssh_username = models.CharField(max_length=200, null=True, blank=True)
     ssh_password = models.CharField(max_length=200, null=True, blank=True)
     end_time = models.DateField(null=True, blank=True)
     reseller = models.ForeignKey(Reseller, null=True, blank=True)
-
+    reseller_panel = models.CharField(max_length=200, null=True, blank=True)
+    reseller_panel_username = models.CharField(max_length=200, null=True, blank=True)
+    reseller_panel_password = models.CharField(max_length=200, null=True, blank=True)
+    online_panel = models.CharField(max_length=200)
+    online_panel_username = models.CharField(max_length=200, null=True, blank=True)
+    online_panel_password = models.CharField(max_length=200, null=True, blank=True)
+    root_permissions =  models.BooleanField(choices=BOOL_CHOICES,  default=False)
+    management_contract  =  models.BooleanField(choices=BOOL_CHOICES,  default=True)
     def __str__(self):
         return self.name
 
