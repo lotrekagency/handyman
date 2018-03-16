@@ -63,10 +63,7 @@ class Domain(models.Model):
     
     def save(self, *args, **kwargs):
         date = str(self.end_time)+'T09:00:00-07:00'
-
-        if (self.calendar_id):
-
-            event = {
+        event = {
             'summary': 'Scadenza dominio '+self.name,
             'description': 'scade il dominio, attenzione',
             'start': {
@@ -85,29 +82,14 @@ class Domain(models.Model):
                 ],
             },
             }
+        if (self.calendar_id):
+
+       
             event['id']=self.calendar_id
             modify_googleevent(event)
 
         else :    
-            event = {
-            'summary': 'Scadenza dominio '+self.name,
-            'description': 'scade il dominio, attenzione',
-            'start': {
-                'dateTime': date,
-                'timeZone': 'Europe/Rome',
-            },
-            'end': {
-                'dateTime': date,
-                'timeZone': 'Europe/Rome',
-            },
-            'reminders': {
-                'useDefault': False,
-                'overrides': [
-                {'method': 'email', 'minutes': 24 * 60},
-                {'method': 'popup', 'minutes': 10},
-                ],
-            },
-            }
+          
             if (self.to_renew) :
                 self.calendar_id = put_googleevent(event)
         
@@ -162,6 +144,40 @@ class Machine(models.Model):
     root_permissions =  models.BooleanField(choices=BOOL_CHOICES,  default=False)
     management_contract  =  models.BooleanField(choices=BOOL_CHOICES,  default=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    calendar_id = models.CharField(max_length=200,null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        date = str(self.end_time)+'T09:00:00-07:00'
+        event = {
+            'summary': 'Scadenza Server '+self.name,
+            'description': 'scade il server , attenzione',
+            'start': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'end': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+                ],
+            },
+            }  
+
+        if (self.calendar_id):
+            event['id']=self.calendar_id
+            modify_googleevent(event)
+
+        else :    
+           
+            self.calendar_id = put_googleevent(event)
+        
+        super(Machine, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
