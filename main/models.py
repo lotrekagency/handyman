@@ -24,9 +24,16 @@ import csv
 
 from django.http import HttpResponse
 
+from .actions import put_googleevent, get_googlecalendarcredentials, modify_googleevent
 
 class LotrekUser(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
+
+class Customer(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=200,null=True, blank=True)
+    def __str__(self):
+        return self.name 
 
 
 class Registar(models.Model):
@@ -52,8 +59,62 @@ class Domain(models.Model):
     registrant = models.ForeignKey(Domainregistrant, null=True, blank=True)
     own = models.NullBooleanField(choices=BOOL_CHOICES, null=True, blank=True)
     to_renew = models.NullBooleanField(choices=BOOL_CHOICES, default=True)
+    calendar_id = models.CharField(max_length=200,null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        date = str(self.end_time)+'T09:00:00-07:00'
+
+        if (self.calendar_id):
+
+            event = {
+            'summary': 'Scadenza dominio '+self.name,
+            'description': 'scade il dominio, attenzione',
+            'start': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'end': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+                ],
+            },
+            }
+            event['id']=self.calendar_id
+            modify_googleevent(event)
+
+        else :    
+            event = {
+            'summary': 'Scadenza dominio '+self.name,
+            'description': 'scade il dominio, attenzione',
+            'start': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'end': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+                ],
+            },
+            }
+            if (self.to_renew) :
+                self.calendar_id = put_googleevent(event)
+        
+        super(Domain, self).save(*args, **kwargs)
     def __str__(self):
         return self.name
+
 
 
 class Certificateseller(models.Model):
@@ -68,6 +129,7 @@ class Certificate(models.Model):
     name = models.CharField(max_length=200)
     end_time = models.DateField(null=True, blank=True)
     seller = models.ForeignKey(Certificateseller, null=True, blank=True)
+    customer = models.ForeignKey(Customer, null=True, blank=True)
     def __str__(self):
         return self.name
 
@@ -99,6 +161,7 @@ class Machine(models.Model):
     online_panel_password = models.CharField(max_length=200, null=True, blank=True)
     root_permissions =  models.BooleanField(choices=BOOL_CHOICES,  default=False)
     management_contract  =  models.BooleanField(choices=BOOL_CHOICES,  default=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     def __str__(self):
         return self.name
 
@@ -124,6 +187,22 @@ class Project(models.Model):
         self.slug = slugify(getattr(self, 'name'))
         super(Project, self).save(*args, **kwargs)
 
+
+
+
+class Payment(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+    name = models.CharField(max_length=200)
+    customer = models.ForeignKey(Customer, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    domains = models.ManyToManyField(Domain, null=True, blank=True)
+    machines = models.ManyToManyField(Machine, null=True, blank=True)
+    certificates= models.ManyToManyField(Certificate, null=True, blank=True)
+    month = models.DecimalField(max_digits=2, decimal_places=0, null=True, blank=True)
+    end_time = models.DateField(null=True, blank=True)
+    start_time = models.DateField(null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    paid = models.BooleanField(choices=BOOL_CHOICES,  default=False)
 
 REPORT_TYPES = (
     ('BACK', 'Backup'),
