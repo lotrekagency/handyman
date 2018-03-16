@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#google calendar settings
+
 
 # Email settings
 DEFAULT_FROM_EMAIL = 'mail@mail.com'

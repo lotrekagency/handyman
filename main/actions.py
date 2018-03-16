@@ -13,6 +13,9 @@ from oauth2client.file import Storage
 
 import datetime
 
+
+from markino.local_settings import *
+
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Google Calendar API Python Quickstart'
@@ -47,11 +50,11 @@ def get_googlecalendarcredentials():
     return credentials
 
 def modify_googleevent(event) :
-    
+
     credentials = get_googlecalendarcredentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
-    updated_event = service.events().update(calendarId='primary', eventId=event['id'], body=event).execute()
+    updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event['id'], body=event).execute()
     return(event['id']) 
 
 def put_googleevent(event):
@@ -67,7 +70,7 @@ def put_googleevent(event):
     date=date['dateTime'];
     exist = 0
     eventsResult = service.events().list(
-        calendarId='primary', timeMin=date,  maxResults=10, singleEvents=True,
+        calendarId=CALENDAR_ID, timeMin=date,  maxResults=10, singleEvents=True,
         orderBy='startTime').execute()
     events = eventsResult.get('items', [])
     
@@ -80,7 +83,7 @@ def put_googleevent(event):
    
     if (exist == 0):
         print('inserisco')
-        event = service.events().insert(calendarId='marco@lotrek.it', body=event).execute()
+        event = service.events().insert(calendarId=CALENDAR_ID, body=event).execute()
         return(event['id'])
     else :
         print('non inserisco')       
