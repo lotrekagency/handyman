@@ -82,9 +82,9 @@ class Domain(models.Model):
                 ],
             },
             }
-        if (self.calendar_id):
 
-       
+        if (self.calendar_id): 
+
             event['id']=self.calendar_id
             modify_googleevent(event)
 
@@ -112,6 +112,40 @@ class Certificate(models.Model):
     end_time = models.DateField(null=True, blank=True)
     seller = models.ForeignKey(Certificateseller, null=True, blank=True)
     customer = models.ForeignKey(Customer, null=True, blank=True)
+    calendar_id = models.CharField(max_length=200,null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        date = str(self.end_time)+'T09:00:00-07:00'
+        event = {
+            'summary': 'Scadenza Certificato '+self.name,
+            'description': 'scade il certificato , attenzione',
+            'start': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'end': {
+                'dateTime': date,
+                'timeZone': 'Europe/Rome',
+            },
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+                ],
+            },
+            }  
+
+        if (self.calendar_id):
+            event['id']=self.calendar_id
+            modify_googleevent(event)
+
+        else :    
+           
+            self.calendar_id = put_googleevent(event)
+        
+        super(Certificate, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
