@@ -24,3 +24,4 @@ mock
 djlotrek==0.0.4
 huey==1.7.0
 twilio
+google-api-python-client
