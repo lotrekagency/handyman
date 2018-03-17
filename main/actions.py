@@ -58,9 +58,7 @@ def modify_googleevent(event) :
     return(event['id']) 
 
 def put_googleevent(event):
-  
-
-   
+ 
     credentials = get_googlecalendarcredentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
@@ -82,11 +80,11 @@ def put_googleevent(event):
             exist = 1
    
     if (exist == 0):
-        print('inserisco')
+     #   print('inserisco')
         event = service.events().insert(calendarId=CALENDAR_ID, body=event).execute()
         return(event['id'])
-    else :
-        print('non inserisco')       
+   #else :
+    #    print('non inserisco')       
 
     
 

@@ -35,6 +35,7 @@ class MachineAdmin(admin.ModelAdmin):
         (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password')}),
         (_('Online panel'), {'fields': ('online_panel', 'online_panel_username', 'online_panel_password')}),
     )
+    search_fields = ('name','server_address')
     list_filter = ('reseller',)
     list_display = ('name', 'server_address', 'root_permissions','management_contract', 'price','reseller', 'end_time')
     #actions = [openterminal("ssh open", fields=['server_address','ssh_username','ssh_password'])]
@@ -72,6 +73,7 @@ class DomainAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('General'), {'fields': ('name', 'price','end_time','own','registar','registrant','to_renew')}),
     )
+    search_fields = ('name',)
     list_filter = ('registrant','registar','own','end_time',)
     list_display = ('name', 'own','price','registar','registrant', 'end_time','to_renew')
     actions = [export_as_csv_action("CSV Export", fields=['name','price'])]
@@ -106,6 +108,7 @@ class PaymentAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('General'), {'fields': ('name','paid', 'customer','price','note','machines','domains','certificates','start_time','end_time','month')}),
     )
+    search_fields = ('name',)
     filter_horizontal = ('domains','machines','certificates',)
     list_filter = ('paid',)
     list_display = ('name', 'customer','price','month','start_time','end_time','paid')
