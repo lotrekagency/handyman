@@ -90,6 +90,7 @@ class CertificateAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('General'), {'fields': ('name', 'end_time','customer','seller')}),
     )
+    search_fields = ('name',)
     list_filter = ('customer',)
     list_display = ('name', 'end_time','customer')
 

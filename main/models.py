@@ -253,6 +253,41 @@ class Payment(models.Model):
     start_time = models.DateField(null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     paid = models.BooleanField(choices=BOOL_CHOICES,  default=False)
+    calendar_id = models.CharField(max_length=200,null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if (self.paid):
+            date = str(self.end_time)+'T09:00:00-07:00'
+            event = {
+                'summary': 'Scadenza Pagamento '+self.name,
+                'description': 'scade il contratto , che era valido dal ' + self.start_time.strftime("%d-%m-%Y ") + 'al ' + self.end_time.strftime("%d-%m-%Y "),
+                'start': {
+                    'dateTime': date,
+                    'timeZone': 'Europe/Rome',
+                },
+                'end': {
+                    'dateTime': date,
+                    'timeZone': 'Europe/Rome',
+                },
+                'reminders': {
+                    'useDefault': False,
+                    'overrides': [
+                    {'method': 'email', 'minutes': 24 * 60},
+                    {'method': 'popup', 'minutes': 10},
+                    ],
+                },
+            }  
+            if (self.calendar_id):
+                event['id']=self.calendar_id
+                modify_googleevent(event)
+
+            else :    
+            
+                self.calendar_id = put_googleevent(event)
+            
+            super(Payment, self).save(*args, **kwargs)
+        else :
+            super(Payment, self).save(*args, **kwargs)
 
 REPORT_TYPES = (
     ('BACK', 'Backup'),
