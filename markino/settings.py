@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#google calendar settings
+
 
 # Email settings
 DEFAULT_FROM_EMAIL = 'mail@mail.com'
@@ -50,7 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'huey.contrib.djhuey',
-    'phonenumber_field'
+    'phonenumber_field',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

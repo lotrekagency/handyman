@@ -25,3 +25,6 @@ backup_markino/
 
 deploy_settings.sh
 *.pid
+
+
+client_secret.json
