@@ -53,6 +53,7 @@ def execute_backup(project):
         backuptime = datetime.now().strftime("%Y-%m-%d(%H-%M-%S)")
         archive_file = os.path.join(
             settings.BACKUP_PATH,
+            project_slug,
             '{0}-{1}-backup.zip'.format(project_slug, backuptime)
         )
         sftp.get(backup_archive, archive_file)
