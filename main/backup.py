@@ -14,7 +14,17 @@ class SSHClient(paramiko.SSHClient):
         return self.exec_command(command.strip(';'))
 
 
-def execute_backup(project, server, username, password, script, backup_archive, sync_folders):
+def execute_backup(project):
+
+    print ('HELLO')
+
+    project_slug = project.slug
+    server = project.machine.server_address
+    username = project.machine.ssh_username
+    password = project.machine.ssh_password
+    script = project.backup_script
+    backup_archive = project.backup_archive
+    sync_folders = project.backup_sync_folders
 
     sftp = None
     ssh = None
@@ -43,7 +53,7 @@ def execute_backup(project, server, username, password, script, backup_archive, 
         backuptime = datetime.now().strftime("%Y-%m-%d(%H-%M-%S)")
         archive_file = os.path.join(
             settings.BACKUP_PATH,
-            '{0}-{1}-backup.zip'.format(project, backuptime)
+            '{0}-{1}-backup.zip'.format(project_slug, backuptime)
         )
         sftp.get(backup_archive, archive_file)
         if ssh:
@@ -54,13 +64,13 @@ def execute_backup(project, server, username, password, script, backup_archive, 
             for folder in sync_folders.split('\r\n'):
                 command_sync = 'sshpass -p "{0}" rsync -avv {1}@{2}:{3} {4}'.format(
                     password, username, server, folder,
-                    os.path.join(settings.BACKUP_PATH, project)
+                    os.path.join(settings.BACKUP_PATH, project_slug)
                 )
                 os.system(command_sync)
 
         command_zip_folder = 'zip -r {0}.zip {1}'.format(
-            os.path.join(settings.BACKUP_PATH, project),
-            os.path.join(settings.BACKUP_PATH, project)
+            os.path.join(settings.BACKUP_PATH, project_slug),
+            os.path.join(settings.BACKUP_PATH, project_slug)
         )
         os.system(command_zip_folder)
 

@@ -27,6 +27,7 @@ class LotrekUser(AbstractUser):
 
 class Reseller(models.Model):
     name = models.CharField(max_length=200)
+    # DATI DI ACCESSO RESELLER
 
     def __str__(self):
         return self.name
@@ -53,9 +54,13 @@ class Project(models.Model):
     machine = models.ForeignKey(Machine, null=True, blank=True)
 
     # BACKUP
+    ## Folders to do rsync
     backup_sync_folders = models.TextField(null=True, blank=True)
+    ## Archive file containing the backup
     backup_archive = models.CharField(max_length=250, null=True, blank=True)
+    ## Backup script
     backup_script = models.TextField(null=True, blank=True)
+    ## If backup is active for cron jobs
     backup_active = models.BooleanField()
 
     def __str__(self):
@@ -85,19 +90,19 @@ class Report(models.Model):
 
         try:
             send_mail(
-                settings.DEFAULT_FROM_EMAIL, users_emails, 
-                '[Report {0}] Markino has a new Report'.format(self.pk), 
+                settings.DEFAULT_FROM_EMAIL, users_emails,
+                '[Report {0}] Markino has a new Report'.format(self.pk),
                 context={
                     'link' : url,
                     'description' : self.text
                 },
-                template_html='mails/report_mail.html', 
+                template_html='mails/report_mail.html',
                 template_txt='mails/report_mail.txt',
                 fail_silently=settings.DEBUG,
             )
         except Exception as ex:
             print (ex)
-            print('Failed while contacting {0}'.format(user.username))
+            print('Failed while contacting {0}'.format(str(users_emails)))
 
         time.sleep(1)
 

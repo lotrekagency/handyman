@@ -30,15 +30,7 @@ def test_project(project):
 def backup_project(project):
     if project.backup_active and project.machine:
         try:
-            execute_backup(
-                project.slug,
-                project.machine.server_address,
-                project.machine.ssh_username,
-                project.machine.ssh_password,
-                project.backup_script,
-                project.backup_archive,
-                project.backup_sync_folders
-            )
+            execute_backup(project)
         except BackupException as ex:
             report_text = '{0}\n'.format(ex)
             report = Report.objects.create(class_type='BACK', project=project, text=report_text)

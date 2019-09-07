@@ -46,7 +46,7 @@ class ProjectAdmin(admin.ModelAdmin):
     readonly_fields = ('slug',)
     filter_horizontal = ('team',)
     list_filter = ('backup_active',)
-    list_display = ('name', 'live_url', 'backup_active', 'machine',)
+    list_display = ('name', 'slug', 'live_url', 'backup_active', 'machine',)
 
 
 class ReportAdmin(admin.ModelAdmin):

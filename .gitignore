@@ -20,7 +20,7 @@ media/
 
 backup/
 backup_markino/
-
+backup_copy
 # Deploy settings
 
 deploy_settings.sh
