@@ -1,6 +1,6 @@
-# Markino
+# Handyman
 
-Markino is the best friend for Lotrèk that can notify you if a server is down, custom scripts, backups and beer.
+Handyman is the best friend for Lotrèk that can notify you if a server is down, custom scripts, backups and beer.
 
 ## Features
 
@@ -22,19 +22,19 @@ Before starting Markino you may need to override settings: just create local_set
 
 	BACKUP_PATH = '/Volumes/EXT_DISK/markino_backup'
 
-## Start Markino
+## Start Handyman
 
-To start Markino use
+To start Handyman use
 
-    $ ./markino.sh start
+    $ ./handyman.sh start
 
-To stop Markino
+To stop Handyman
 
-    $ ./markino.sh stop
+    $ ./handyman.sh stop
 
 You can find all the logs
 
-    $ tail -f markino.log
+    $ tail -f handyman.log
 
 ## Use command line
 
