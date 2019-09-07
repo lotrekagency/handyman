@@ -1,0 +1,5 @@
+static/
+postgres-data/
+.git
+db.sqlite3
+*.pyc

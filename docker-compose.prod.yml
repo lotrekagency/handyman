@@ -1,0 +1,64 @@
+version: '3'
+services:
+    web:
+        build:
+            context: .
+            dockerfile: ./docker/production/nginx.dockerfile
+        restart: always
+        ports:
+            - "8000:80"
+        volumes:
+            - ./docker/production/conf.d:/etc/nginx/conf.d
+            - ./static:/usr/share/nginx/static
+        depends_on:
+            - django
+        networks:
+            - handyman-net
+        # version, services, networks, volume
+
+    db:
+        image: postgres:10
+        restart: unless-stopped
+        networks:
+            - handyman-net
+        volumes:
+            - ./postgres-data:/var/lib/postgresql/data
+        env_file: ./docker/production/envs/db.env
+
+    django:
+        build:
+            context: .
+            dockerfile: ./docker/production/django.dockerfile
+        command: "./fla.sh"
+        volumes:
+            - ./static:/handyman/static
+        networks:
+            - handyman-net
+        depends_on:
+            - db
+        env_file:
+            - ./docker/production/envs/django.env
+            - ./docker/production/envs/db.env
+
+    redis:
+        image: library/redis:latest
+        restart: unless-stopped
+        networks:
+            - handyman-net
+
+#   huey:
+#     image: registry.gitlab.com/lotrekdevteam/corman/cormancity:master
+#     command: python manage.py run_huey
+#     restart: unless-stopped
+#     volumes:
+#       - ./ftp:/opt/services/cormancity/src/ftp
+#     networks:
+#       - redis_network
+#       - database1_network
+#     depends_on:
+#       - redis
+
+
+networks:
+    handyman-net:
+        driver: bridge

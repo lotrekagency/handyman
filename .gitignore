@@ -25,3 +25,6 @@ backup_copy
 
 deploy_settings.sh
 *.pid
+
+docker/production/envs
+postgres-data/
