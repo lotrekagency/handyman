@@ -16,8 +16,6 @@ class SSHClient(paramiko.SSHClient):
 
 def execute_backup(project):
 
-    print ('HELLO')
-
     project_slug = project.slug
     server = project.machine.server_address
     username = project.machine.ssh_username
@@ -51,6 +49,7 @@ def execute_backup(project):
 
         sftp = ssh.open_sftp()
         backuptime = datetime.now().strftime("%Y-%m-%d(%H-%M-%S)")
+        os.makedirs(os.path.join(settings.BACKUP_PATH, project_slug), exist_ok=True)
         archive_file = os.path.join(
             settings.BACKUP_PATH,
             project_slug,
