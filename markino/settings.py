@@ -87,10 +87,22 @@ WSGI_APPLICATION = 'markino.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DB', 'handyman'),
+        'USER': os.environ.get('POSTGRES_USER', 'root'),
+        'PASSWORD':os.environ.get('POSTGRES_PASSWORD', 'admin'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': '',
     }
 }
 
@@ -163,51 +175,16 @@ BACKUP_SCHEDULE = {
 
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
 
-HUEY = {
-    'name': 'markinotaskrunner',  # The huey name.
-    'result_store': True,  # Store return values of tasks.
-    'events': True,  # Consumer emits events allowing real-time monitoring.
-    'store_none': False,  # If a task returns None, do not save to results.
-    'always_eager': False,  # If DEBUG=True, run synchronously.
-    'store_errors': True,  # Store error info if task throws exception.
-    'blocking': False,  # Poll the queue rather than do blocking pop.
-    'connection': {
-        'host': 'localhost',
-        'port': 6379,
-        'db': 0,
-        'connection_pool': None,  # Definitely you should use pooling!
-        # ... tons of other options, see redis-py for details.
+from huey import RedisHuey
+from redis import ConnectionPool
 
-        # huey-specific connection parameters.
-        'read_timeout': 1,  # If not polling (blocking pop), use timeout.
-        'max_errors': 1000,  # Only store the 1000 most recent errors.
-        'url': None,  # Allow Redis config via a DSN.
-    },
-    'consumer': {
-        'workers': 2,
-        'worker_type': 'thread',
-        'initial_delay': 0.1,  # Smallest polling interval, same as -d.
-        'backoff': 1.15,  # Exponential backoff using this rate, -b.
-        'max_delay': 10.0,  # Max possible polling interval, -m.
-        'utc': True,  # Treat ETAs and schedules as UTC datetimes.
-        'scheduler_interval': 1,  # Check schedule every second, -s.
-        'periodic': True,  # Enable crontab feature.
-        'check_worker_health': True,  # Enable worker health checks.
-        'health_check_interval': 1,  # Check worker health every second.
-    },
-}
+pool = ConnectionPool(host=os.environ.get('REDIS_HOST', 'localhost'), port=6379, max_connections=20)
+HUEY = RedisHuey('handymantasks', connection_pool=pool)
 
 try:
     from .local_settings import *
 except ImportError:
     print ("\n\nWARNING: No local_settings.py found! Please look at the README.md file!\n\n")
-
-try:
-    from .deploy_settings import *
-    print ("\n\nSTART DEPLOYED APP!\n\n")
-except ImportError:
-    pass
-
 
 try:
     os.makedirs(BACKUP_PATH)

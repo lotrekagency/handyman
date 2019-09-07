@@ -10,7 +10,7 @@ venv
 *.sqlite3
 *.rdb
 .coverage
-local_settings.py
+markino/local_settings.py
 static/
 libs/
 node_modules

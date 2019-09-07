@@ -18,8 +18,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from .exceptions import FrontendTestException
 
-from twilio.rest import Client
-
 
 class LotrekUser(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
