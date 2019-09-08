@@ -52,18 +52,15 @@ def check_deadlines(project):
         if deadline.end_time and deadline.end_time - datetime.timedelta(days=7) < today < deadline.end_time:
             print ('SCADE!')
 
-@db_periodic_task(
-    crontab(**settings.TESTING_SCHEDULE)
-)
+
+@db_periodic_task(crontab(**settings.TESTING_SCHEDULE))
 def test_projects():
     projects = Project.objects.all()
     for project in projects:
         test_project(project)
 
 
-@db_periodic_task(
-    crontab(**settings.BACKUP_SCHEDULE)
-)
+@db_periodic_task(crontab(**settings.BACKUP_SCHEDULE))
 def backup_projects():
     if not os.path.exists(settings.BACKUP_PATH):
         os.makedirs(settings.BACKUP_PATH)

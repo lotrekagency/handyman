@@ -32,6 +32,8 @@ services:
         command: "./fla.sh"
         volumes:
             - ./static:/handyman/static
+            - ./media:/handyman/media
+            - ../TEAM_DEV/backups:/handyman/backups
         networks:
             - handyman-net
         depends_on:
@@ -45,19 +47,6 @@ services:
         restart: unless-stopped
         networks:
             - handyman-net
-
-#   huey:
-#     image: registry.gitlab.com/lotrekdevteam/corman/cormancity:master
-#     command: python manage.py run_huey
-#     restart: unless-stopped
-#     volumes:
-#       - ./ftp:/opt/services/cormancity/src/ftp
-#     networks:
-#       - redis_network
-#       - database1_network
-#     depends_on:
-#       - redis
-
 
 networks:
     handyman-net:

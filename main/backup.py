@@ -48,7 +48,7 @@ def execute_backup(project):
             raise BackupException(error_reporting)
 
         sftp = ssh.open_sftp()
-        backuptime = datetime.now().strftime("%Y-%m-%d(%H-%M-%S)")
+        backuptime = datetime.now().strftime("%Y-%m-%d[%H_%M_%S]")
         os.makedirs(os.path.join(settings.BACKUP_PATH, project_slug), exist_ok=True)
         archive_file = os.path.join(
             settings.BACKUP_PATH,
@@ -67,12 +67,6 @@ def execute_backup(project):
                     os.path.join(settings.BACKUP_PATH, project_slug)
                 )
                 os.system(command_sync)
-
-        command_zip_folder = 'zip -r {0}.zip {1}'.format(
-            os.path.join(settings.BACKUP_PATH, project_slug),
-            os.path.join(settings.BACKUP_PATH, project_slug)
-        )
-        os.system(command_zip_folder)
 
     except Exception as ex:
         raise BackupException(ex)

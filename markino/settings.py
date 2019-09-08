@@ -154,11 +154,7 @@ TESTING_SCHEDULE = {
 
 # Backup
 
-BACKUP_FOLDER = 'backup_markino'
-
-# BACKUP_SCHEDULE = {
-#     'hour' : '13, 20',
-# }
+BACKUP_FOLDER = 'backups'
 
 BACKUP_SCHEDULE = {
     'hour' : '*',

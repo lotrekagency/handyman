@@ -5,10 +5,18 @@ FROM python:3.7
 RUN apt-get update
 
 RUN apt-get install gettext -y
+RUN apt-get install sshpass -y
+RUN apt-get install zip -y
+RUN apt-get install rsync -y
 
 # The enviroment variable ensures that the python output is set straight
 # to the terminal with out buffering it first
 ENV PYTHONUNBUFFERED 1
+
+# Create ssh files
+
+RUN mkdir -p ~/.ssh/
+RUN touch ~/.ssh/known_hosts
 
 # create root directory for our project in the container
 RUN mkdir /handyman
