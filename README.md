@@ -1,6 +1,6 @@
 # Handyman
 
-Handyman is the best friend for Lotrèk that can notify you if a server is down, custom scripts, backups and beer.
+Handyman is the best friend for Lotrèk that can notify you if a server is down, execute custom scripts, make nightly backups and beer 🍻
 
 ## Features
 
@@ -8,44 +8,24 @@ Handyman is the best friend for Lotrèk that can notify you if a server is down,
 
 - Backup/script system: provides a periodic backup system for data and files and scripting
 
-## Install external software
+## Configure ENV
 
-You need SSHPass and Redis running on your system
-
-## Install requirements
-
-	$ pip install -r requirements.txt
-
-## Override settings
-
-Before starting Markino you may need to override settings: just create local_settings.py file inside markino folder.
-
-	BACKUP_PATH = '/Volumes/EXT_DISK/markino_backup'
+Before starting Handyman you need to configure your env: create your env files inside `docker/production/envs` folder (see `docker/production/envs-sample`)
 
 ## Start Handyman
 
-To start Handyman use
-
-    $ ./handyman.sh start
-
-To stop Handyman
-
-    $ ./handyman.sh stop
-
-You can find all the logs
-
-    $ tail -f handyman.log
+    docker-compose -f docker-compose.staging.yml up -d
 
 ## Use command line
 
-To backup a specific project run
+To backup a specific project run inside `handyman_django` container
 
-    $ python manage.py backup_project my_project_slug
+    python manage.py backup_project my_project_slug
 
 To test a specific project run
 
-    $ python manage.py test_project my_project_slug
+    python manage.py test_project my_project_slug
 
 To test a specific domain run
 	
-	$ python manage.py test_domain my_project_slug
+    python manage.py test_domain my_project_slug
