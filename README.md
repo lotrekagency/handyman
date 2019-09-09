@@ -14,7 +14,7 @@ Before starting Handyman you need to configure your env: create your env files i
 
 ## Start Handyman
 
-    docker-compose -f docker-compose.prod.yml up -d
+    ./deploy.sh release
 
 ## Use command line
 
@@ -27,5 +27,5 @@ To test a specific project run
     python manage.py test_project my_project_slug
 
 To test a specific domain run
-	
+
     python manage.py test_domain my_project_slug
