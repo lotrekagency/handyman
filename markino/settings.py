@@ -141,14 +141,10 @@ AUTH_USER_MODEL = "main.LotrekUser"
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# Broker settings.
-BROKER_URL = 'redis://localhost:6379'
-
 # Testing
 
 TESTING_SCHEDULE = {
     'hour' : '*',
-    'minute' : '*',
     'day_of_week' : '*'
 }
 
@@ -157,8 +153,7 @@ TESTING_SCHEDULE = {
 BACKUP_FOLDER = 'backups'
 
 BACKUP_SCHEDULE = {
-    'hour' : '*',
-    'minute' : '*',
+    'hour' : '2',
     'day_of_week' : '*'
 }
 

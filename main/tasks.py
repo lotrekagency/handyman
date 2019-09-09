@@ -3,7 +3,7 @@ import requests
 import datetime
 
 from huey import crontab
-from huey.contrib.djhuey import db_periodic_task, db_task
+from huey.contrib.djhuey import db_periodic_task, db_task, periodic_task
 
 from main.backup import execute_backup
 from main.exceptions import BackupException, FrontendTestException
@@ -67,3 +67,8 @@ def backup_projects():
     projects = Project.objects.select_related('machine').all()
     for project in projects:
         backup_project(project)
+
+
+@periodic_task(crontab(minute='*'))
+def every_five_mins():
+    print('Every five minutes this will be printed by the consumer')

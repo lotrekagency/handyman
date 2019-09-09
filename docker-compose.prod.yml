@@ -42,6 +42,21 @@ services:
             - ./docker/production/envs/django.env
             - ./docker/production/envs/db.env
 
+    huey:
+        build:
+            context: .
+            dockerfile: ./docker/production/django.dockerfile
+        command: python manage.py run_huey
+        volumes:
+            - ../TEAM_DEV/backups:/handyman/backups
+        networks:
+            - handyman-net
+        depends_on:
+            - django
+        env_file:
+            - ./docker/production/envs/django.env
+            - ./docker/production/envs/db.env
+
     redis:
         image: library/redis:latest
         restart: unless-stopped
