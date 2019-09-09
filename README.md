@@ -14,7 +14,7 @@ Before starting Handyman you need to configure your env: create your env files i
 
 ## Start Handyman
 
-    docker-compose -f docker-compose.staging.yml up -d
+    docker-compose -f docker-compose.prod.yml up -d
 
 ## Use command line
 
