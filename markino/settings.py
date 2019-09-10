@@ -152,7 +152,7 @@ TESTING_SCHEDULE = {
 BACKUP_FOLDER = 'backups'
 
 BACKUP_SCHEDULE = {
-    'hour' : '9',
+    'hour' : '13',
     'minute' : '0'
 }
 
