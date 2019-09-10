@@ -152,7 +152,8 @@ TESTING_SCHEDULE = {
 BACKUP_FOLDER = 'backups'
 
 BACKUP_SCHEDULE = {
-    'hour' : '2'
+    'hour' : '9',
+    'minute' : '0'
 }
 
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
