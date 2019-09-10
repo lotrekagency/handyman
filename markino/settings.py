@@ -144,8 +144,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # Testing
 
 TESTING_SCHEDULE = {
-    'hour' : '*',
-    'day_of_week' : '*'
+    'hour' : '*'
 }
 
 # Backup
@@ -153,8 +152,7 @@ TESTING_SCHEDULE = {
 BACKUP_FOLDER = 'backups'
 
 BACKUP_SCHEDULE = {
-    'hour' : '2',
-    'day_of_week' : '*'
+    'hour' : '2'
 }
 
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
