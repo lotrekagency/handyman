@@ -53,7 +53,7 @@ def check_deadlines(project):
             print ('SCADE!')
 
 
-@db_periodic_task(crontab(hour='*/1'))
+@db_periodic_task(crontab(**settings.TESTING_SCHEDULE))
 def test_projects():
     print ('ES')
     projects = Project.objects.all()

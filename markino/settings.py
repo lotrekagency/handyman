@@ -144,7 +144,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # Testing
 
 TESTING_SCHEDULE = {
-    'hour' : '*/1'
+    'hour' : '*/1',
+    'minute' : '0'
 }
 
 # Backup
