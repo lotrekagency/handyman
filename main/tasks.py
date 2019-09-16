@@ -3,7 +3,7 @@ import requests
 import datetime
 
 from huey import crontab
-from huey.contrib.djhuey import db_periodic_task, db_task
+from huey_logger.decorators import log_db_periodic_task, log_db_task
 
 from main.backup import execute_backup
 from main.exceptions import BackupException, FrontendTestException
@@ -42,7 +42,7 @@ def check_machines_deadlines():
     today = datetime.date.today()
     for machine in machines:
         if machine.end_time and machine.end_time - datetime.timedelta(days=7) < today < machine.end_time:
-            print ('SCADE!')
+            print ('DEADLINE!')
 
 
 def check_deadlines(project):
@@ -50,24 +50,20 @@ def check_deadlines(project):
     today = datetime.date.today()
     for deadline in deadlines:
         if deadline.end_time and deadline.end_time - datetime.timedelta(days=7) < today < deadline.end_time:
-            print ('SCADE!')
+            print ('DEADLINE!')
 
 
-@db_periodic_task(crontab(**settings.TESTING_SCHEDULE))
+@log_db_periodic_task(crontab(**settings.TESTING_SCHEDULE))
 def test_projects():
-    print ('ES')
     projects = Project.objects.all()
     for project in projects:
         test_project(project)
 
 
-@db_periodic_task(crontab(**settings.BACKUP_SCHEDULE))
+@log_db_periodic_task(crontab(**settings.BACKUP_SCHEDULE))
 def backup_projects():
-    print ('Start Backup')
-    print (settings.BACKUP_SCHEDULE)
     if not os.path.exists(settings.BACKUP_PATH):
         os.makedirs(settings.BACKUP_PATH)
     projects = Project.objects.select_related('machine').all()
     for project in projects:
         backup_project(project)
-    print ('End Backup')
