@@ -73,8 +73,8 @@ def execute_backup(project):
                         os.path.join(settings.BACKUP_PATH, project_slug)
                     )
                 else:
-                    command_sync = "rsync -avv {0}@{1}:{2} {3}'.format(
-                        username, server, folder,
+                    command_sync = 'rsync -avv --rsh="ssh -i {0}" {1}@{2}:{3} {4}'.format(
+                        os.getenv('RSA_KEY_PASSPHRASE'), username, server, folder,
                         os.path.join(settings.BACKUP_PATH, project_slug)
                     )
                 os.system(command_sync)
