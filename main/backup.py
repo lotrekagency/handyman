@@ -31,7 +31,12 @@ def execute_backup(project):
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-        ssh.connect(server, username=username, password=password)
+        if password:
+            ssh.connect(server, username=username, password=password)
+        else:
+            key_path = os.path.expanduser(os.path.join("~", ".ssh", "id_rsa"))
+            key = paramiko.RSAKey.from_private_key_file(key_path, os.getenv('RSA_KEY_PASSPHRASE'))
+            ssh.connect(server, username=username, pkey=key)
         print (script.split('\r\n'))
         stdin, stdout, stderr = ssh.exec_commands(*script.split('\r\n'))
         exit_status = stderr.channel.recv_exit_status()

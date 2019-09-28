@@ -9,6 +9,14 @@ RUN apt-get install sshpass -y
 RUN apt-get install zip -y
 RUN apt-get install rsync -y
 
+# Copy keys
+
+RUN mkdir -p /root/.ssh && \
+    chmod 0700 /root/.ssh
+COPY ./docker/production/keys /root/.ssh
+RUN chmod 600 /root/.ssh/id_rsa && \
+    chmod 600 /root/.ssh/id_rsa.pub
+
 # The enviroment variable ensures that the python output is set straight
 # to the terminal with out buffering it first
 ENV PYTHONUNBUFFERED 1

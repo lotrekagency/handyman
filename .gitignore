@@ -27,4 +27,5 @@ deploy_settings.sh
 *.pid
 
 docker/production/envs
+docker/production/keys
 postgres-data/
