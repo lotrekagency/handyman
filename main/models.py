@@ -2,7 +2,7 @@ import time
 
 import requests
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from django.contrib.auth.models import AbstractUser
 
@@ -36,8 +36,16 @@ class Machine(models.Model):
     server_address = models.CharField(max_length=200, null=True, blank=True)
     ssh_username = models.CharField(max_length=200, null=True, blank=True)
     ssh_password = models.CharField(max_length=200, null=True, blank=True)
+    notes = models.TextField(blank=True, null=True)
     end_time = models.DateField(null=True, blank=True)
-    reseller = models.ForeignKey(Reseller, null=True, blank=True)
+    reseller = models.ForeignKey(Reseller, null=True, blank=True, on_delete=models.SET_NULL)
+
+    @property
+    def ssh_access(self):
+        if self.server_address and self.ssh_username and self.ssh_password:
+            return "ssh {0}@{1} - pwd: {2}".format(
+                self.ssh_username, self.server_address, self.ssh_password
+            )
 
     def __str__(self):
         return self.name
@@ -49,7 +57,7 @@ class Project(models.Model):
     slug = models.SlugField(max_length=200)
     live_url = models.URLField(max_length=400)
     team = models.ManyToManyField(LotrekUser)
-    machine = models.ForeignKey(Machine, null=True, blank=True)
+    machine = models.ForeignKey(Machine, null=True, blank=True, on_delete=models.SET_NULL)
 
     # BACKUP
     ## Folders to do rsync
@@ -76,7 +84,7 @@ REPORT_TYPES = (
 )
 
 class Report(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
     class_type = models.CharField(max_length=4, choices=REPORT_TYPES, blank=True, null=True)

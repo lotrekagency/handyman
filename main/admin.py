@@ -4,6 +4,9 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline
 
+admin.site.site_header = '🔩 Handyman'
+admin.site.index_title = 'The best Lotrèk\'s friend for backups, monitoring and 🍻'
+
 
 class LotrekUserAdmin(UserAdmin):
     actions = []
@@ -29,7 +32,7 @@ class DeadlineInline(admin.TabularInline):
 class MachineAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('General'), {'fields': ('name', 'reseller', 'end_time')}),
-        (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password')}),
+        (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password', 'notes')}),
     )
     list_display = ('name', 'server_address', 'reseller', 'end_time')
 
@@ -40,13 +43,30 @@ class ProjectAdmin(admin.ModelAdmin):
         DeadlineInline
     ]
     fieldsets = (
-        (_('General'), {'fields': ('name', 'slug', 'live_url', 'team', 'machine')}),
+        (_('General'), {'fields': ('name', 'slug', 'live_url', 'team', 'machine', 'ssh_access', 'machine_notes')}),
         (_('Backup'), {'fields': ('backup_active', 'backup_archive', 'backup_script', 'backup_sync_folders')}),
     )
-    readonly_fields = ('slug',)
+    readonly_fields = ('slug', 'ssh_access', 'machine_notes')
     filter_horizontal = ('team',)
     list_filter = ('backup_active',)
-    list_display = ('name', 'slug', 'live_url', 'backup_active', 'machine',)
+    list_display = (
+        'name', 'slug', 'live_url',
+        'backup_active', 'machine',
+    )
+
+    def get_queryset(self, request):
+        qs = super(ProjectAdmin, self).get_queryset(request)
+        if not request.user.is_superuser:
+            return qs.filter(team__id__in=[request.user.id])
+        return qs
+
+    def ssh_access(self, obj):
+        if obj.machine:
+            return obj.machine.ssh_access
+
+    def machine_notes(self, obj):
+        if obj.machine:
+            return obj.machine.notes
 
 
 class ReportAdmin(admin.ModelAdmin):
