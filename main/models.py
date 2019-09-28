@@ -42,9 +42,12 @@ class Machine(models.Model):
 
     @property
     def ssh_access(self):
-        if self.server_address and self.ssh_username and self.ssh_password:
+        password = self.ssh_password
+        if not password:
+            password = "🔑 Use Key"
+        if self.server_address and self.ssh_username:
             return "ssh {0}@{1} - pwd: {2}".format(
-                self.ssh_username, self.server_address, self.ssh_password
+                self.ssh_username, self.server_address, password
             )
 
     def __str__(self):
