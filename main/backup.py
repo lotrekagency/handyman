@@ -67,10 +67,16 @@ def execute_backup(project):
         time.sleep(2)
         if sync_folders:
             for folder in sync_folders.split('\r\n'):
-                command_sync = 'sshpass -p "{0}" rsync -avv {1}@{2}:{3} {4}'.format(
-                    password, username, server, folder,
-                    os.path.join(settings.BACKUP_PATH, project_slug)
-                )
+                if password:
+                    command_sync = 'sshpass -p "{0}" rsync -avv {1}@{2}:{3} {4}'.format(
+                        password, username, server, folder,
+                        os.path.join(settings.BACKUP_PATH, project_slug)
+                    )
+                else:
+                    command_sync = "rsync -avv {0}@{1}:{2} {3}'.format(
+                        username, server, folder,
+                        os.path.join(settings.BACKUP_PATH, project_slug)
+                    )
                 os.system(command_sync)
 
     except Exception as ex:
