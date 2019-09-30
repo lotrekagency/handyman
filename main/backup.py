@@ -74,7 +74,7 @@ def execute_backup(project):
                     )
                 else:
                     command_sync = 'sshpass -P passphrase -p "{0}" rsync -avv {1}@{2}:{3} {4}'.format(
-                        password, username, server, folder,
+                        os.getenv('RSA_KEY_PASSPHRASE'), username, server, folder,
                         os.path.join(settings.BACKUP_PATH, project_slug)
                     )
                 os.system(command_sync)
