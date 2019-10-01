@@ -25,6 +25,9 @@ class LotrekUser(AbstractUser):
 
 class Reseller(models.Model):
     name = models.CharField(max_length=200)
+    reseller_panel = models.CharField(max_length=200, null=True, blank=True)
+    reseller_panel_username = models.CharField(max_length=200, null=True, blank=True)
+    reseller_panel_password = models.CharField(max_length=200, null=True, blank=True)
     # DATI DI ACCESSO RESELLER
 
     def __str__(self):
