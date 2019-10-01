@@ -15,6 +15,23 @@ class LotrekUserAdmin(UserAdmin):
     readonly_fields = ('last_login', 'date_joined',)
 
 
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return ('last_login', 'date_joined',)
+        else:
+            return (
+                'last_login', 'date_joined',
+                'is_active', 'is_staff', 'is_superuser',
+                'user_permissions'
+            )
+
+    def get_queryset(self, request):
+        qs = super(LotrekUserAdmin, self).get_queryset(request)
+        if not request.user.is_superuser:
+            return qs.filter(id=request.user.id)
+        return qs
+
+
 class FrontendTestInline(admin.TabularInline):
     model = FrontendTest
     extra = 1
