@@ -30,14 +30,16 @@ ALLOWED_HOSTS = []
 
 
 # Email settings
-DEFAULT_FROM_EMAIL = 'mail@mail.com'
-SERVER_EMAIL = 'mail@mail.com'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.host.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mail@mail.com'
-EMAIL_HOST_PASSWORD = 'pass'
 
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+
+
+HANDYMAN_HOST = os.environ.get('HANDYMAN_HOST')
+SLACK_WEBHOOK = os.environ.get('SLACK_WEBHOOK')
 
 # Application definition
 

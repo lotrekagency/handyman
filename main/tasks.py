@@ -16,7 +16,7 @@ from main.models import Report, Project, LotrekUser, Deadline, Machine
 
 def test_project(project):
     report_text = ''
-    tests = FrontendTest.objects.all()
+    tests = FrontendTest.objects.filter(project=project)
     for test in tests:
         try:
             test.run()

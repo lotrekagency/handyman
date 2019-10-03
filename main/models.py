@@ -1,19 +1,13 @@
 import time
-
 import requests
+import json
 
 from django.urls import reverse
-
 from django.contrib.auth.models import AbstractUser
-
 from django.db import models
-
 from django.conf import settings
-
 from djlotrek import send_mail
-
 from django.utils.text import slugify
-
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .exceptions import FrontendTestException
@@ -95,18 +89,33 @@ class Report(models.Model):
     text = models.TextField(blank=True, null=True)
     class_type = models.CharField(max_length=4, choices=REPORT_TYPES, blank=True, null=True)
 
-    def notify(self):
+    def get_host(self):
+        host = getattr(settings, 'HANDYMAN_HOST')
+        if not host.endswith('/'):
+            return host + '/'
 
-        url = reverse('admin:main_report_change', args=[self.id])
-        users_emails = LotrekUser.objects.filter(project=self.project).values('email')
+    def notify(self):
+        import urllib.parse
+        print (reverse('admin:main_report_change', args=[self.id]))
+        url = urllib.parse.urljoin(self.get_host(), reverse('admin:main_report_change', args=[self.id]))
+        print (url)
+        users_emails = LotrekUser.objects.filter(project=self.project).values_list('email', flat=True)
 
         try:
+            payload = {'text': '⚠️ A new report for *{0}* is ready @channel: {1}'.format(self.project.slug, url)}
+            requests.post(
+                getattr(settings, 'SLACK_WEBHOOK'),
+                data=json.dumps(payload)
+            )
+        except Exception as ex:
+            print (ex)
+            print('Failed while contacting {0}'.format(str(users_emails)))
+        try:
             send_mail(
-                settings.DEFAULT_FROM_EMAIL, users_emails,
-                '[Report {0}] Markino has a new Report'.format(self.pk),
+                settings.EMAIL_HOST_USER, users_emails,
+                '⚠️ #{0} Handyman has a new report for {1}'.format(self.pk, self.project.slug),
                 context={
-                    'link' : url,
-                    'description' : self.text
+                    'link' : url
                 },
                 template_html='mails/report_mail.html',
                 template_txt='mails/report_mail.txt',
