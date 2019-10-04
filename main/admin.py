@@ -52,6 +52,7 @@ class MachineAdmin(admin.ModelAdmin):
         (_('Ssh'), {'fields': ('server_address', 'ssh_username', 'ssh_password', 'notes')}),
     )
     list_display = ('name', 'server_address', 'reseller', 'end_time')
+    search_fields = ('name', 'server_address')
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -65,11 +66,12 @@ class ProjectAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('slug', 'ssh_access', 'machine_notes')
     filter_horizontal = ('team',)
-    list_filter = ('backup_active',)
+    list_filter = ('backup_active', 'machine')
     list_display = (
         'name', 'slug', 'live_url',
         'backup_active', 'machine',
     )
+    search_fields = ('name', 'slug')
 
     def get_queryset(self, request):
         qs = super(ProjectAdmin, self).get_queryset(request)
