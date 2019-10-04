@@ -78,6 +78,18 @@ def check_deadlines(project):
             report.notify()
 
 
+@log_db_periodic_task(crontab(**settings.DEADLINES_SCHEDULE))
+def check_all_the_deadlines():
+    projects = Project.objects.all()
+    for project in projects:
+        check_deadlines(project)
+
+
+@log_db_periodic_task(crontab(**settings.DEADLINES_SCHEDULE))
+def check_all_the_machine_deadlines():
+    check_machines_deadlines()
+
+
 @log_db_periodic_task(crontab(**settings.TESTING_SCHEDULE))
 def test_projects():
     projects = Project.objects.all()

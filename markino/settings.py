@@ -160,6 +160,11 @@ BACKUP_SCHEDULE = {
     'minute' : '0'
 }
 
+DEADLINES_SCHEDULE = {
+    'hour' : '7',
+    'minute' : '0'
+}
+
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
 
 from huey import RedisHuey

@@ -26,6 +26,7 @@ To test a specific project run
 
     python manage.py test_project my_project_slug
 
-To test a specific domain run
+To test deadlines:
 
-    python manage.py test_domain my_project_slug
+    python manage.py check_machines_deadlines
+    python manage.py check_deadlines my_project_slug
