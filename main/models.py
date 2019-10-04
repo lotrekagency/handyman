@@ -57,7 +57,7 @@ class Project(models.Model):
     slug = models.SlugField(max_length=200)
     live_url = models.URLField(max_length=400)
     team = models.ManyToManyField(LotrekUser)
-    machine = models.ForeignKey(Machine, null=True, blank=True, on_delete=models.SET_NULL)
+    machine = models.ForeignKey(Machine, null=True, blank=True, on_delete=models.SET_NULL, related_name='projects')
 
     # BACKUP
     ## Folders to do rsync
@@ -77,32 +77,69 @@ class Project(models.Model):
         super(Project, self).save(*args, **kwargs)
 
 
+REPORT_TYPE_BACK = 'BACK'
+REPORT_TYPE_TEST = 'TEST'
+REPORT_TYPE_DEADLINE = 'DEAD'
+REPORT_TYPE_MACHINE_DEADLINE = 'MDEA'
+
 REPORT_TYPES = (
-    ('BACK', 'Backup'),
-    ('TEST', 'Testing'),
-    ('I.BS', 'Domain Error')
+    (REPORT_TYPE_BACK, 'Backup'),
+    (REPORT_TYPE_TEST, 'Testing'),
+    (REPORT_TYPE_DEADLINE, 'Deadline'),
+    (REPORT_TYPE_MACHINE_DEADLINE, 'Machine Deadline')
 )
 
 class Report(models.Model):
     project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
-    class_type = models.CharField(max_length=4, choices=REPORT_TYPES, blank=True, null=True)
+    class_type = models.CharField(max_length=4, choices=REPORT_TYPES, blank=True, null=True, verbose_name='Type')
 
     def get_host(self):
         host = getattr(settings, 'HANDYMAN_HOST')
         if not host.endswith('/'):
             return host + '/'
 
+    def _get_report_titles(self, url):
+
+        if self.class_type == REPORT_TYPE_BACK:
+            return {
+                'mail' : '⚠️ #{0} Backup error for {1}'.format(self.pk, self.project.slug),
+                'slack' : '⚠️ Backup error for *{0}* @channel: {1}'.format(
+                    self.project.slug, url
+                )
+            }
+        if self.class_type == REPORT_TYPE_TEST:
+            return {
+                'mail' : '❌ #{0} Tests are failing for {1}'.format(self.pk, self.project.slug),
+                'slack' : '❌ Tests are failing for *{0}* @channel: {1}'.format(
+                    self.project.slug, url
+                )
+            }
+        if self.class_type == REPORT_TYPE_DEADLINE:
+            return {
+                'mail' : '⏰ #{0} New deadline for {1}'.format(self.pk, self.project.slug),
+                'slack' : '⏰ New deadline for *{0}* @channel: {1} {2}'.format(
+                    self.project.slug, self.text, url
+                ),
+                'text' : self.text
+            }
+        if self.class_type == REPORT_TYPE_MACHINE_DEADLINE:
+            return {
+                'mail' : '🎰 #{0} New machine deadline for {1}'.format(self.pk, self.project.slug),
+                'slack' : '🎰 New machine deadline for *{0}* @channel: {1} {2}'.format(
+                    self.project.slug, self.text, url
+                ),
+                'text' : self.text
+            }
+
     def notify(self):
         import urllib.parse
-        print (reverse('admin:main_report_change', args=[self.id]))
-        url = urllib.parse.urljoin(self.get_host(), reverse('admin:main_report_change', args=[self.id]))
-        print (url)
         users_emails = LotrekUser.objects.filter(project=self.project).values_list('email', flat=True)
-
+        url = urllib.parse.urljoin(self.get_host(), reverse('admin:main_report_change', args=[self.id]))
+        report_titles = self._get_report_titles(url)
         try:
-            payload = {'text': '⚠️ A new report for *{0}* is ready @channel: {1}'.format(self.project.slug, url)}
+            payload = {'text': report_titles['slack']}
             requests.post(
                 getattr(settings, 'SLACK_WEBHOOK'),
                 data=json.dumps(payload)
@@ -111,12 +148,13 @@ class Report(models.Model):
             print (ex)
             print('Failed while contacting {0}'.format(str(users_emails)))
         try:
+            context = {'link' : url}
+            if 'text' in report_titles:
+                context['text'] = report_titles['text']
             send_mail(
                 settings.EMAIL_HOST_USER, users_emails,
-                '⚠️ #{0} Handyman has a new report for {1}'.format(self.pk, self.project.slug),
-                context={
-                    'link' : url
-                },
+                report_titles['mail'],
+                context=context,
                 template_html='mails/report_mail.html',
                 template_txt='mails/report_mail.txt',
                 fail_silently=settings.DEBUG,

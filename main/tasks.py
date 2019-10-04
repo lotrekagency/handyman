@@ -12,6 +12,7 @@ from main.models import Project, FrontendTest, Report
 from django.conf import settings
 
 from main.models import Report, Project, LotrekUser, Deadline, Machine
+from main.models import REPORT_TYPE_BACK, REPORT_TYPE_TEST, REPORT_TYPE_DEADLINE, REPORT_TYPE_MACHINE_DEADLINE
 
 
 def test_project(project):
@@ -23,7 +24,11 @@ def test_project(project):
         except FrontendTestException as ex:
             report_text += '{0}\n'.format(ex)
     if report_text:
-        report = Report.objects.create(class_type='TEST', project=project, text=report_text)
+        report = Report.objects.create(
+            class_type=REPORT_TYPE_TEST,
+            project=project,
+            text=report_text
+        )
         report.notify()
 
 
@@ -33,24 +38,44 @@ def backup_project(project):
             execute_backup(project)
         except BackupException as ex:
             report_text = '{0}\n'.format(ex)
-            report = Report.objects.create(class_type='BACK', project=project, text=report_text)
+            report = Report.objects.create(
+                class_type=REPORT_TYPE_BACK,
+                project=project,
+                text=report_text
+            )
             report.notify()
+
+
+def is_in_time_window(date, deltadays=7):
+    today = datetime.date.today()
+    return date - datetime.timedelta(days=deltadays) < today < date
 
 
 def check_machines_deadlines():
     machines = Machine.objects.all()
-    today = datetime.date.today()
+
     for machine in machines:
-        if machine.end_time and machine.end_time - datetime.timedelta(days=7) < today < machine.end_time:
-            print ('DEADLINE!')
+        if machine.end_time and is_in_time_window(machine.end_time):
+            for project in machine.projects.all():
+                report = Report.objects.create(
+                    class_type=REPORT_TYPE_MACHINE_DEADLINE,
+                    project=project,
+                    text='Machine {0} is going to end on {1}'.format(machine.name, machine.end_time)
+                )
+                report.notify()
 
 
 def check_deadlines(project):
     deadlines = Deadline.objects.filter(project=project)
     today = datetime.date.today()
     for deadline in deadlines:
-        if deadline.end_time and deadline.end_time - datetime.timedelta(days=7) < today < deadline.end_time:
-            print ('DEADLINE!')
+        if deadline.end_time and is_in_time_window(deadline.end_time):
+            report = Report.objects.create(
+                class_type=REPORT_TYPE_DEADLINE,
+                project=project,
+                text='New deadline {0} {1}'.format(deadline.end_time, deadline.notes)
+            )
+            report.notify()
 
 
 @log_db_periodic_task(crontab(**settings.TESTING_SCHEDULE))
