@@ -98,7 +98,8 @@ class Report(models.Model):
     def get_host(self):
         host = getattr(settings, 'HANDYMAN_HOST')
         if not host.endswith('/'):
-            return host + '/'
+            host = host + '/'
+        return host
 
     def _get_report_titles(self, url):
 
