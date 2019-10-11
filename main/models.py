@@ -35,6 +35,10 @@ class Machine(models.Model):
     (6, 'Semester'),
     (12, 'Year'),
     )
+    TYPE= (
+    (1, 'Staging'),
+    (2, 'Production'),
+    )
     name = models.CharField(max_length=200)
     root_permissions =  models.BooleanField(choices=BOOL_CHOICES,  default=False)
     management_contract  =  models.BooleanField(choices=BOOL_CHOICES,  default=True)
@@ -49,6 +53,7 @@ class Machine(models.Model):
     administration_panel_password = models.CharField(max_length=200, null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     price_period=models.IntegerField(default=1,choices=PERIOD)
+    machine_type=models.IntegerField(default=1,choices=TYPE)
     @property
     def ssh_access(self):
         password = self.ssh_password
