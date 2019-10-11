@@ -55,14 +55,13 @@ def check_machines_deadlines():
     machines = Machine.objects.all()
 
     for machine in machines:
-        if machine.end_time and is_in_time_window(machine.end_time):
-            for project in machine.projects.all():
-                report = Report.objects.create(
-                    class_type=REPORT_TYPE_MACHINE_DEADLINE,
-                    project=project,
-                    text='Machine {0} is going to end on {1}'.format(machine.name, machine.end_time)
-                )
-                report.notify()
+        if machine.end_time and len(machine.projects) and is_in_time_window(machine.end_time):
+            report = Report.objects.create(
+                class_type=REPORT_TYPE_MACHINE_DEADLINE,
+                project=machine.projects[0],
+                text='Machine {0} is going to end on {1}'.format(machine.name, machine.end_time)
+            )
+            report.notify()
 
 
 def check_deadlines(project):
