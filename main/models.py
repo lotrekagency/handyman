@@ -29,14 +29,31 @@ class Reseller(models.Model):
 
 
 class Machine(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+    PERIOD= (
+    (1, 'Month'),
+    (6, 'Semester'),
+    (12, 'Year'),
+    )
+    TYPE= (
+    (1, 'Staging'),
+    (2, 'Production'),
+    )
     name = models.CharField(max_length=200)
+    root_permissions =  models.BooleanField(choices=BOOL_CHOICES,  default=False)
+    management_contract  =  models.BooleanField(choices=BOOL_CHOICES,  default=True)
     server_address = models.CharField(max_length=200, null=True, blank=True)
     ssh_username = models.CharField(max_length=200, null=True, blank=True)
     ssh_password = models.CharField(max_length=200, null=True, blank=True)
     notes = models.TextField(blank=True, null=True)
     end_time = models.DateField(null=True, blank=True)
     reseller = models.ForeignKey(Reseller, null=True, blank=True, on_delete=models.SET_NULL)
-
+    administration_panel = models.CharField(max_length=200, null=True, blank=True)
+    administration_panel_username = models.CharField(max_length=200, null=True, blank=True)
+    administration_panel_password = models.CharField(max_length=200, null=True, blank=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    price_period=models.IntegerField(default=1,choices=PERIOD)
+    machine_type=models.IntegerField(default=1,choices=TYPE)
     @property
     def ssh_access(self):
         password = self.ssh_password
