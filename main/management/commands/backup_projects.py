@@ -1,6 +1,8 @@
-from main.tasks import backup_projects
+from main.tasks import backup_project
 
 from django.core.management.base import BaseCommand, CommandError
+
+from main.models import Project
 
 
 class Command(BaseCommand):
@@ -9,7 +11,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            backup_projects()
+            projects = Project.objects.select_related('machine').all()
+            for project in projects:
+                backup_project(project)
             self.stdout.write(self.style.SUCCESS(
                 'Backup completed for projects'
             ))
