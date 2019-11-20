@@ -60,7 +60,8 @@ def execute_backup(project):
             project_slug,
             '{0}-{1}-backup.zip'.format(project_slug, backuptime)
         )
-        sftp.get(backup_archive, archive_file)
+        if backup_archive:
+            sftp.get(backup_archive, archive_file)
         if ssh:
             ssh.close()
             ssh = None
