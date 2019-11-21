@@ -167,6 +167,8 @@ DEADLINES_SCHEDULE = {
 
 BACKUP_PATH = os.path.join(BASE_DIR, BACKUP_FOLDER)
 
+FILE_DAYS_OLD_TO_REMOVE = os.environ.get('FILE_DAYS_OLD_TO_REMOVE', 7)
+
 from huey import RedisHuey
 from redis import ConnectionPool
 

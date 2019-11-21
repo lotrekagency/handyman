@@ -87,3 +87,12 @@ def execute_backup(project):
             sftp.close()
         if ssh:
             ssh.close()
+
+    # Delete old backup files
+    backup_directory = os.path.join(settings.BACKUP_PATH, project_slug)
+    for file in os.listdir(backup_directory):
+        path = os.path.join(backup_directory, file)
+        if os.path.isfile(path):
+            time_old = datetime.now() - datetime.fromtimestamp(os.stat(path).st_mtime)
+            if time_old.days > settings.FILE_DAYS_OLD_TO_REMOVE:
+                os.remove(path)
