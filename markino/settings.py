@@ -111,7 +111,7 @@ DATABASES = {
 #         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
 #         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
 #     }
-}
+#}
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
