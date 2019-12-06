@@ -2,12 +2,20 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline
-
+from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline, Domain
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 admin.site.site_header = '🔩 Handyman'
 admin.site.index_title = 'The best Lotrèk\'s friend for backups, monitoring and 🍻'
 
+class DomainResource(resources.ModelResource):
 
+    class Meta:
+        model = Domain
+        fields = ('url','price','end_time')
+        widgets = {
+                   'end_time': {'format': '%d/%m/%Y'},
+                  }
 class LotrekUserAdmin(UserAdmin):
     actions = []
     fieldsets = ()
@@ -40,6 +48,18 @@ class FrontendTestInline(admin.TabularInline):
 class ResellerAdmin(admin.ModelAdmin):
     pass
 
+
+
+class DomainAdmin(ImportExportModelAdmin):
+    resource_class = DomainResource
+    fieldsets = (
+        (_('General'), {'fields': ('url','price','end_time')}),
+        (_('Service'), {'fields': ('site_on','site_on_backup','mail_on','mail_on_backup')}),
+    )
+    list_display = ('url', 'price','end_time')
+    list_filter = ('site_on','mail_on')
+    search_fields = ('url','end_time')
+    #search_fields = ('url')
 
 class DeadlineInline(admin.TabularInline):
     model = Deadline
@@ -101,4 +121,4 @@ admin.site.register(Report, ReportAdmin)
 admin.site.register(LotrekUser, LotrekUserAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Reseller, ResellerAdmin)
-
+admin.site.register(Domain, DomainAdmin)
