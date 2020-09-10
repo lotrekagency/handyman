@@ -11,6 +11,7 @@ from django.utils.text import slugify
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .exceptions import FrontendTestException
+from .fields import NonStrippingTextField
 
 
 class LotrekUser(AbstractUser):
@@ -199,22 +200,27 @@ class FrontendTest(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     url = models.URLField(max_length=400)
     test = models.CharField(max_length=3, choices=TEST_CHOICES)
-    assertion = models.TextField()
+    assertion = NonStrippingTextField()
+
+
+    def _normalize_text(self, text):
+        return text.replace('\r\n', '\n').replace('\r', '\n')
 
     def run(self):
         response = requests.get(self.url)
-        text = response.text
+        text = self._normalize_text(response.text)
+        assertion = self._normalize_text(self.assertion)
         try:
             if self.test == 'EQ':
-                assert text == self.assertion
+                assert text == assertion
             if self.test == 'NE':
-                assert text != self.assertion
+                assert text != assertion
             if self.test == 'IN':
-                assert self.assertion in text
+                assert assertion in text
             if self.test == 'NI':
-                assert self.assertion not in text
+                assert assertion not in text
         except AssertionError:
-            assertion_explain = '{0} {1} {2}'.format(self.assertion, self.test, text)
+            assertion_explain = '{0} {1} {2}'.format(assertion, self.test, text)
             assertion_explain += '\n\n\n\n'
             raise FrontendTestException(assertion_explain)
 
