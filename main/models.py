@@ -207,7 +207,8 @@ class FrontendTest(models.Model):
         return text.replace('\r\n', '\n').replace('\r', '\n')
 
     def run(self):
-        response = requests.get(self.url)
+        headers = {'User-Agent': 'whatever'}
+        response = requests.get(self.url, headers=headers)
         text = self._normalize_text(response.text)
         assertion = self._normalize_text(self.assertion)
         try:
