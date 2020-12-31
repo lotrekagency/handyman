@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 
 from unittest.mock import *
 
-from tasks import *
+from .tasks import *
 
 
 class ReportTest(TestCase):
