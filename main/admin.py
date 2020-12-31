@@ -6,7 +6,7 @@ from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-admin.site.site_header = '🔩 Handyman'
+admin.site.site_header = '👷 Handyman'
 admin.site.index_title = 'The best Lotrèk\'s friend for backups, monitoring and 🍻'
 
 
