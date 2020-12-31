@@ -1,6 +1,6 @@
 # The first instruction is what image we want to base our container on
 # We Use an official Python runtime as a parent image
-FROM python:3.7
+FROM python:3.8.2
 
 RUN apt-get update
 

@@ -4,7 +4,6 @@ anyjson==0.3.3
 asn1crypto==0.22.0
 billiard==3.3.0.23
 celery==3.1.25
-cffi==1.10.0
 Django==2.2.8
 idna==2.5
 kombu==3.0.37
@@ -22,5 +21,5 @@ wheel==0.24.0
 mock
 djlotrek==0.0.6
 huey==2.1.2
-psycopg2
+psycopg2-binary
 django-huey-logger==1.0.0

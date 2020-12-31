@@ -17,7 +17,7 @@ services:
         # version, services, networks, volume
 
     db:
-        image: postgres:10
+        image: postgres:13
         restart: unless-stopped
         networks:
             - handyman-net
