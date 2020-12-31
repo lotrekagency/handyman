@@ -21,6 +21,6 @@ wheel==0.24.0
 mock
 djlotrek==0.0.6
 huey==2.1.2
-psycopg2-binary
+psycopg2-binary==2.8.6
 django-huey-logger==1.0.0
-django-import-export
+django-import-export==2.4.0

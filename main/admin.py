@@ -5,8 +5,10 @@ from django.utils.translation import gettext_lazy as _
 from .models import Project, FrontendTest, Report, LotrekUser, Machine, Reseller, Deadline, Domain
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+
 admin.site.site_header = '🔩 Handyman'
 admin.site.index_title = 'The best Lotrèk\'s friend for backups, monitoring and 🍻'
+
 
 class DomainResource(resources.ModelResource):
 
@@ -15,7 +17,9 @@ class DomainResource(resources.ModelResource):
         fields = ('url','price','end_time')
         widgets = {
                    'end_time': {'format': '%d/%m/%Y'},
-                  }
+        }
+
+
 class LotrekUserAdmin(UserAdmin):
     actions = []
     fieldsets = ()
@@ -49,7 +53,6 @@ class ResellerAdmin(admin.ModelAdmin):
     pass
 
 
-
 class DomainAdmin(ImportExportModelAdmin):
     resource_class = DomainResource
     fieldsets = (
@@ -60,6 +63,7 @@ class DomainAdmin(ImportExportModelAdmin):
     list_filter = ('site_on','mail_on')
     search_fields = ('url','end_time')
     #search_fields = ('url')
+
 
 class DeadlineInline(admin.TabularInline):
     model = Deadline
