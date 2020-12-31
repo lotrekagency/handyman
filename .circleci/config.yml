@@ -21,3 +21,4 @@ jobs:
           command: |
             . venv/bin/activate
             coverage run --source='./main' manage.py test && coverage report
+            codecov
