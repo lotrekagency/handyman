@@ -23,3 +23,4 @@ djlotrek==0.0.6
 huey==2.1.2
 psycopg2-binary
 django-huey-logger==1.0.0
+django-import-export

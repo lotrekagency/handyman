@@ -18,6 +18,7 @@ class LotrekUser(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
 
 
+
 class Reseller(models.Model):
     name = models.CharField(max_length=200)
     reseller_panel = models.CharField(max_length=200, null=True, blank=True)
@@ -69,6 +70,7 @@ class Machine(models.Model):
         return self.name
 
 
+
 class Project(models.Model):
     # GENERAL
     name = models.CharField(max_length=200)
@@ -106,6 +108,16 @@ REPORT_TYPES = (
     (REPORT_TYPE_DEADLINE, 'Deadline'),
     (REPORT_TYPE_MACHINE_DEADLINE, 'Machine Deadline')
 )
+class Domain(models.Model):
+    url = models.CharField(max_length=200)
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    end_time = models.DateField(null=True, blank=True)
+    site_on = models.ManyToManyField(Machine, related_name='site',null=True, blank=True)
+    site_on_backup=models.ForeignKey(Project,on_delete=models.CASCADE,null=True, blank=True,related_name='site_backup')
+    mail_on = models.ManyToManyField(Machine,null=True, blank=True)
+    mail_on_backup=models.ForeignKey(Project,on_delete=models.CASCADE,null=True, blank=True)
+    def __str__(self):
+        return self.url
 
 class Report(models.Model):
     project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
