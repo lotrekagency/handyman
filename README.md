@@ -1,5 +1,10 @@
 # Handyman
 
+[![Open Source Love png3](https://badges.frapsoft.com/os/v3/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![CircleCI](https://circleci.com/gh/lotrekagency/handyman.svg?style=svg)](https://circleci.com/gh/lotrekagency/handyman)
+[![codecov](https://codecov.io/gh/lotrekagency/emojiflag/branch/master/graph/badge.svg)](https://codecov.io/gh/lotrekagency/handyman)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/lotrekagency/handyman/blob/master/LICENSE)
+
 Handyman is the best friend for Lotrèk that can notify you if a server is down, execute custom scripts, make nightly backups and beer 🍻
 
 ## Features
