@@ -4,7 +4,7 @@ anyjson==0.3.3
 asn1crypto==0.22.0
 billiard==3.3.0.23
 celery==3.1.25
-Django==2.2.18
+Django==2.2.20
 idna==2.5
 kombu==3.0.37
 packaging==16.8
