@@ -7,18 +7,29 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0029_auto_20191206_1606'),
+        ("main", "0029_auto_20191206_1606"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='domain',
-            name='mail_on_backup',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='main.Project'),
+            model_name="domain",
+            name="mail_on_backup",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="main.Project",
+            ),
         ),
         migrations.AddField(
-            model_name='domain',
-            name='site_on_backup',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='site_backup', to='main.Project'),
+            model_name="domain",
+            name="site_on_backup",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="site_backup",
+                to="main.Project",
+            ),
         ),
     ]

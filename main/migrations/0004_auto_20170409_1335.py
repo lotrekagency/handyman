@@ -8,23 +8,23 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0003_auto_20170409_1245'),
+        ("main", "0003_auto_20170409_1245"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='project',
-            old_name='password',
-            new_name='server_address',
+            model_name="project",
+            old_name="password",
+            new_name="server_address",
         ),
         migrations.RenameField(
-            model_name='project',
-            old_name='server',
-            new_name='ssh_password',
+            model_name="project",
+            old_name="server",
+            new_name="ssh_password",
         ),
         migrations.RenameField(
-            model_name='project',
-            old_name='username',
-            new_name='ssh_username',
+            model_name="project",
+            old_name="username",
+            new_name="ssh_username",
         ),
     ]

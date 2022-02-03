@@ -8,23 +8,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0009_auto_20170614_2315'),
+        ("main", "0009_auto_20170614_2315"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='lotrekuser',
-            name='phone_number',
+            model_name="lotrekuser",
+            name="phone_number",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AlterField(
-            model_name='lotrekuser',
-            name='twilio_account',
+            model_name="lotrekuser",
+            name="twilio_account",
             field=models.CharField(blank=True, max_length=50, null=True),
         ),
         migrations.AlterField(
-            model_name='lotrekuser',
-            name='twilio_token',
+            model_name="lotrekuser",
+            name="twilio_token",
             field=models.CharField(blank=True, max_length=50, null=True),
         ),
     ]

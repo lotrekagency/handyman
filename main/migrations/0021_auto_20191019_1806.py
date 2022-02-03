@@ -7,58 +7,85 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0020_auto_20191001_1235'),
+        ("main", "0020_auto_20191001_1235"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='machine',
-            name='administration_panel',
+            model_name="machine",
+            name="administration_panel",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='administration_panel_password',
+            model_name="machine",
+            name="administration_panel_password",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='administration_panel_username',
+            model_name="machine",
+            name="administration_panel_username",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='machine_type',
-            field=models.IntegerField(choices=[(1, 'Staging'), (2, 'Production')], default=1),
+            model_name="machine",
+            name="machine_type",
+            field=models.IntegerField(
+                choices=[(1, "Staging"), (2, "Production")], default=1
+            ),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='management_contract',
-            field=models.BooleanField(choices=[(True, 'Yes'), (False, 'No')], default=True),
+            model_name="machine",
+            name="management_contract",
+            field=models.BooleanField(
+                choices=[(True, "Yes"), (False, "No")], default=True
+            ),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='price',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=6, null=True),
+            model_name="machine",
+            name="price",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=6, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='price_period',
-            field=models.IntegerField(choices=[(1, 'Month'), (6, 'Semester'), (12, 'Year')], default=1),
+            model_name="machine",
+            name="price_period",
+            field=models.IntegerField(
+                choices=[(1, "Month"), (6, "Semester"), (12, "Year")], default=1
+            ),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='root_permissions',
-            field=models.BooleanField(choices=[(True, 'Yes'), (False, 'No')], default=False),
+            model_name="machine",
+            name="root_permissions",
+            field=models.BooleanField(
+                choices=[(True, "Yes"), (False, "No")], default=False
+            ),
         ),
         migrations.AlterField(
-            model_name='project',
-            name='machine',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='projects', to='main.Machine'),
+            model_name="project",
+            name="machine",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="projects",
+                to="main.Machine",
+            ),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='class_type',
-            field=models.CharField(blank=True, choices=[('BACK', 'Backup'), ('TEST', 'Testing'), ('DEAD', 'Deadline'), ('MDEA', 'Machine Deadline')], max_length=4, null=True, verbose_name='Type'),
+            model_name="report",
+            name="class_type",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("BACK", "Backup"),
+                    ("TEST", "Testing"),
+                    ("DEAD", "Deadline"),
+                    ("MDEA", "Machine Deadline"),
+                ],
+                max_length=4,
+                null=True,
+                verbose_name="Type",
+            ),
         ),
     ]

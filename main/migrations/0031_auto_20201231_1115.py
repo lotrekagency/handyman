@@ -7,13 +7,13 @@ import main.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0030_auto_20191206_1643'),
+        ("main", "0030_auto_20191206_1643"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='frontendtest',
-            name='assertion',
+            model_name="frontendtest",
+            name="assertion",
             field=main.fields.NonStrippingTextField(),
         ),
     ]

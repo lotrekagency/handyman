@@ -8,14 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0005_project_backup_active'),
+        ("main", "0005_project_backup_active"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='report',
-            name='class_type',
-            field=models.CharField(choices=[('BACK', 'Backup'), ('TEST', 'Testing')], default='TEST', max_length=4),
+            model_name="report",
+            name="class_type",
+            field=models.CharField(
+                choices=[("BACK", "Backup"), ("TEST", "Testing")],
+                default="TEST",
+                max_length=4,
+            ),
             preserve_default=False,
         ),
     ]

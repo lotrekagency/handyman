@@ -7,38 +7,50 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0019_machine_notes'),
+        ("main", "0019_machine_notes"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='reseller',
-            name='reseller_panel',
+            model_name="reseller",
+            name="reseller_panel",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='reseller',
-            name='reseller_panel_password',
+            model_name="reseller",
+            name="reseller_panel_password",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='reseller',
-            name='reseller_panel_username',
+            model_name="reseller",
+            name="reseller_panel_username",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='lotrekuser',
-            name='last_name',
-            field=models.CharField(blank=True, max_length=150, verbose_name='last name'),
+            model_name="lotrekuser",
+            name="last_name",
+            field=models.CharField(
+                blank=True, max_length=150, verbose_name="last name"
+            ),
         ),
         migrations.AlterField(
-            model_name='machine',
-            name='reseller',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='main.Reseller'),
+            model_name="machine",
+            name="reseller",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="main.Reseller",
+            ),
         ),
         migrations.AlterField(
-            model_name='project',
-            name='machine',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='main.Machine'),
+            model_name="project",
+            name="machine",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="main.Machine",
+            ),
         ),
     ]

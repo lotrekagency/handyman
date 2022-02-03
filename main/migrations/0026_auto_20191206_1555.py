@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0025_machine_domains'),
+        ("main", "0025_machine_domains"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='machine',
-            name='domains',
+            model_name="machine",
+            name="domains",
         ),
         migrations.AddField(
-            model_name='domain',
-            name='site',
-            field=models.ManyToManyField(to='main.Machine'),
+            model_name="domain",
+            name="site",
+            field=models.ManyToManyField(to="main.Machine"),
         ),
     ]

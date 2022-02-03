@@ -6,18 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0027_auto_20191206_1557'),
+        ("main", "0027_auto_20191206_1557"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='domain',
-            name='server_mail',
-            field=models.ManyToManyField(blank=True, null=True, to='main.Machine'),
+            model_name="domain",
+            name="server_mail",
+            field=models.ManyToManyField(blank=True, null=True, to="main.Machine"),
         ),
         migrations.AlterField(
-            model_name='domain',
-            name='site',
-            field=models.ManyToManyField(blank=True, null=True, related_name='site', to='main.Machine'),
+            model_name="domain",
+            name="site",
+            field=models.ManyToManyField(
+                blank=True, null=True, related_name="site", to="main.Machine"
+            ),
         ),
     ]

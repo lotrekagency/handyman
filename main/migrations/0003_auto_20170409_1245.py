@@ -8,39 +8,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0002_project_team'),
+        ("main", "0002_project_team"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='backup_archive',
+            model_name="project",
+            name="backup_archive",
             field=models.CharField(blank=True, max_length=250, null=True),
         ),
         migrations.AddField(
-            model_name='project',
-            name='backup_script',
+            model_name="project",
+            name="backup_script",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='project',
-            name='password',
+            model_name="project",
+            name="password",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='project',
-            name='server',
+            model_name="project",
+            name="server",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='project',
-            name='slug',
-            field=models.SlugField(default='', max_length=200),
+            model_name="project",
+            name="slug",
+            field=models.SlugField(default="", max_length=200),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='project',
-            name='username',
+            model_name="project",
+            name="username",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

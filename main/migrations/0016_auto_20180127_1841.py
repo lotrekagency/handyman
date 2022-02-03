@@ -8,13 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0015_deadline'),
+        ("main", "0015_deadline"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='deadline',
-            name='dead_type',
-            field=models.CharField(choices=[('DOM', 'Domain'), ('CERT', 'Certificate'), ('OTHR', 'Other')], default='OTHR', max_length=4),
+            model_name="deadline",
+            name="dead_type",
+            field=models.CharField(
+                choices=[("DOM", "Domain"), ("CERT", "Certificate"), ("OTHR", "Other")],
+                default="OTHR",
+                max_length=4,
+            ),
         ),
     ]

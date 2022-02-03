@@ -6,5 +6,5 @@ class NonStrippingTextField(TextField):
     it's value.  Might be important for markup/code."""
 
     def formfield(self, **kwargs):
-        kwargs['strip'] = False
+        kwargs["strip"] = False
         return super(NonStrippingTextField, self).formfield(**kwargs)

@@ -8,23 +8,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifier', '0001_initial'),
+        ("notifier", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='contact',
-            old_name='nick_name',
-            new_name='account',
+            model_name="contact",
+            old_name="nick_name",
+            new_name="account",
         ),
         migrations.AddField(
-            model_name='contact',
-            name='sender',
+            model_name="contact",
+            name="sender",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='contact',
-            name='token',
+            model_name="contact",
+            name="token",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
     ]

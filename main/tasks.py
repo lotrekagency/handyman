@@ -1,33 +1,34 @@
 import os
-import requests
 import datetime
 
 from huey import crontab
-from huey_logger.decorators import log_db_periodic_task, log_db_task
+from huey_logger.decorators import log_db_periodic_task
 
 from main.backup import execute_backup
 from main.exceptions import BackupException, FrontendTestException
-from main.models import Project, FrontendTest, Report
+from main.models import Project, FrontendTest, Report, Deadline, Machine
 
 from django.conf import settings
 
-from main.models import Report, Project, LotrekUser, Deadline, Machine
-from main.models import REPORT_TYPE_BACK, REPORT_TYPE_TEST, REPORT_TYPE_DEADLINE, REPORT_TYPE_MACHINE_DEADLINE
+from main.models import (
+    REPORT_TYPE_BACK,
+    REPORT_TYPE_TEST,
+    REPORT_TYPE_DEADLINE,
+    REPORT_TYPE_MACHINE_DEADLINE,
+)
 
 
 def test_project(project):
-    report_text = ''
+    report_text = ""
     tests = FrontendTest.objects.filter(project=project)
     for test in tests:
         try:
             test.run()
         except FrontendTestException as ex:
-            report_text += '{0}\n'.format(ex)
+            report_text += "{0}\n".format(ex)
     if report_text:
         report = Report.objects.create(
-            class_type=REPORT_TYPE_TEST,
-            project=project,
-            text=report_text
+            class_type=REPORT_TYPE_TEST, project=project, text=report_text
         )
         report.notify()
 
@@ -37,11 +38,9 @@ def backup_project(project):
         try:
             execute_backup(project)
         except BackupException as ex:
-            report_text = '{0}\n'.format(ex)
+            report_text = "{0}\n".format(ex)
             report = Report.objects.create(
-                class_type=REPORT_TYPE_BACK,
-                project=project,
-                text=report_text
+                class_type=REPORT_TYPE_BACK, project=project, text=report_text
             )
             report.notify()
 
@@ -56,24 +55,29 @@ def check_machines_deadlines():
 
     for machine in machines:
         machine_projects = machine.projects.all()
-        if machine.end_time and len(machine_projects) and is_in_time_window(machine.end_time):
+        if (
+            machine.end_time
+            and len(machine_projects)
+            and is_in_time_window(machine.end_time)
+        ):
             report = Report.objects.create(
                 class_type=REPORT_TYPE_MACHINE_DEADLINE,
                 project=machine_projects[0],
-                text='Machine {0} is going to end on {1}'.format(machine.name, machine.end_time)
+                text="Machine {0} is going to end on {1}".format(
+                    machine.name, machine.end_time
+                ),
             )
             report.notify()
 
 
 def check_deadlines(project):
     deadlines = Deadline.objects.filter(project=project)
-    today = datetime.date.today()
     for deadline in deadlines:
         if deadline.end_time and is_in_time_window(deadline.end_time):
             report = Report.objects.create(
                 class_type=REPORT_TYPE_DEADLINE,
                 project=project,
-                text='New deadline {0} {1}'.format(deadline.end_time, deadline.notes)
+                text="New deadline {0} {1}".format(deadline.end_time, deadline.notes),
             )
             report.notify()
 
@@ -101,6 +105,6 @@ def test_projects():
 def backup_projects():
     if not os.path.exists(settings.BACKUP_PATH):
         os.makedirs(settings.BACKUP_PATH)
-    projects = Project.objects.select_related('machine').all()
+    projects = Project.objects.select_related("machine").all()
     for project in projects:
         backup_project(project)

@@ -8,18 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0017_auto_20180127_1842'),
+        ("main", "0017_auto_20180127_1842"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='deadline',
-            name='end_time',
+            model_name="deadline",
+            name="end_time",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='machine',
-            name='end_time',
+            model_name="machine",
+            name="end_time",
             field=models.DateField(blank=True, null=True),
         ),
     ]

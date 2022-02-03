@@ -9,13 +9,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0001_initial'),
+        ("main", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='team',
+            model_name="project",
+            name="team",
             field=models.ManyToManyField(to=settings.AUTH_USER_MODEL),
         ),
     ]

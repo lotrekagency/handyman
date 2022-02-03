@@ -6,18 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0028_auto_20191206_1600'),
+        ("main", "0028_auto_20191206_1600"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='domain',
-            old_name='server_mail',
-            new_name='mail_on',
+            model_name="domain",
+            old_name="server_mail",
+            new_name="mail_on",
         ),
         migrations.RenameField(
-            model_name='domain',
-            old_name='site',
-            new_name='site_on',
+            model_name="domain",
+            old_name="site",
+            new_name="site_on",
         ),
     ]

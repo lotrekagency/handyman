@@ -9,18 +9,43 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0014_auto_20180127_1809'),
+        ("main", "0014_auto_20180127_1809"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Deadline',
+            name="Deadline",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dead_type', models.CharField(blank=True, choices=[('BACK', 'Backup'), ('TEST', 'Testing'), ('I.BS', 'Domain Error')], max_length=4, null=True)),
-                ('notes', models.CharField(blank=True, max_length=200, null=True)),
-                ('end_time', models.DateTimeField(blank=True, null=True)),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='main.Project')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "dead_type",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("BACK", "Backup"),
+                            ("TEST", "Testing"),
+                            ("I.BS", "Domain Error"),
+                        ],
+                        max_length=4,
+                        null=True,
+                    ),
+                ),
+                ("notes", models.CharField(blank=True, max_length=200, null=True)),
+                ("end_time", models.DateTimeField(blank=True, null=True)),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="main.Project"
+                    ),
+                ),
             ],
         ),
     ]

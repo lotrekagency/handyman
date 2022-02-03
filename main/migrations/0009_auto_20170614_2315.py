@@ -10,55 +10,72 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0008_auto_20170411_1156'),
+        ("main", "0008_auto_20170411_1156"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='project',
-            name='server_address',
+            model_name="project",
+            name="server_address",
         ),
         migrations.RemoveField(
-            model_name='project',
-            name='ssh_password',
+            model_name="project",
+            name="ssh_password",
         ),
         migrations.RemoveField(
-            model_name='project',
-            name='ssh_username',
+            model_name="project",
+            name="ssh_username",
         ),
         migrations.AddField(
-            model_name='lotrekuser',
-            name='twilio_account',
+            model_name="lotrekuser",
+            name="twilio_account",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AddField(
-            model_name='lotrekuser',
-            name='twilio_token',
+            model_name="lotrekuser",
+            name="twilio_token",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AlterField(
-            model_name='lotrekuser',
-            name='username',
-            field=models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.ASCIIUsernameValidator()], verbose_name='username'),
+            model_name="lotrekuser",
+            name="username",
+            field=models.CharField(
+                error_messages={"unique": "A user with that username already exists."},
+                help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                max_length=150,
+                unique=True,
+                validators=[django.contrib.auth.validators.ASCIIUsernameValidator()],
+                verbose_name="username",
+            ),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='class_type',
-            field=models.CharField(blank=True, choices=[(b'BACK', b'Backup'), (b'TEST', b'Testing')], max_length=4, null=True),
+            model_name="report",
+            name="class_type",
+            field=models.CharField(
+                blank=True,
+                choices=[(b"BACK", b"Backup"), (b"TEST", b"Testing")],
+                max_length=4,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='date',
+            model_name="report",
+            name="date",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='project',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='main.Project'),
+            model_name="report",
+            name="project",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="main.Project",
+            ),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='text',
+            model_name="report",
+            name="text",
             field=models.TextField(blank=True, null=True),
         ),
     ]
