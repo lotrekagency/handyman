@@ -1,11 +1,24 @@
 from django.test import TestCase
 
 from .models import LotrekUser, Project, Report, FrontendTest
-from .exceptions import FrontendTestException
 
 from unittest.mock import patch
 
-from .tasks import *  # NOQA;
+from .tasks import test_project
+
+
+class Response:
+    def __init__(self, response, status_code=200):
+        self._response = response
+        self._status_code = status_code
+
+    @property
+    def text(self):
+        return self._response
+
+    @property
+    def status_code(self):
+        return self._status_code
 
 
 class ReportTest(TestCase):
@@ -39,19 +52,10 @@ class ReportTest(TestCase):
         self.test_users = LotrekUser.objects.filter(project__in=[test_project])
 
 
-class Response:
-    def __init__(self, response):
-        self._response = response
-
-    @property
-    def text(self):
-        return self._response
-
-
 class FrontendTestTest(TestCase):
     def setUp(self):
 
-        test_project = Project.objects.create(
+        self.test_project = Project.objects.create(
             id=1,
             name="Example Project",
             live_url="http://www.google.com",
@@ -60,8 +64,8 @@ class FrontendTestTest(TestCase):
 
         self.test = FrontendTest.objects.create(
             id=1,
-            project=test_project,
-            url=test_project.live_url,
+            project=self.test_project,
+            url=self.test_project.live_url,
             test="IN",
             assertion="Google",
         )
@@ -69,10 +73,17 @@ class FrontendTestTest(TestCase):
     @patch("main.models.requests.get")
     def test_test(self, mock_request):
         mock_request.return_value = Response("Google")
-        self.test.run()
+        test_project(self.test_project)
+        assert Report.objects.count() == 0
 
     @patch("main.models.requests.get")
     def test_test_not_pass(self, mock_request):
-        mock_request.return_value = Response("ASD")
-        with self.assertRaises(FrontendTestException):
-            self.test.run()
+        mock_request.return_value = Response("ASD", 404)
+        test_project(self.test_project)
+        assert Report.objects.count() == 2
+        assert (
+            Report.objects.filter(
+                text="Server is not responding on http://www.google.com"
+            ).first()
+            is not None
+        )

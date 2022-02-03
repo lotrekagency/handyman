@@ -1,5 +1,6 @@
 import os
 import datetime
+import requests
 
 from huey import crontab
 from huey_logger.decorators import log_db_periodic_task
@@ -21,6 +22,15 @@ from main.models import (
 def test_project(project):
     report_text = ""
     tests = FrontendTest.objects.filter(project=project)
+    headers = {"User-Agent": "whatever"}
+    response = requests.get(project.live_url, headers=headers)
+    if response.status_code != 200:
+        report = Report.objects.create(
+            class_type=REPORT_TYPE_TEST,
+            project=project,
+            text="Server is not responding on {0}".format(project.live_url),
+        )
+        report.notify()
     for test in tests:
         try:
             test.run()
