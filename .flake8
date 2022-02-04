@@ -2,3 +2,4 @@
 max-line-length = 165
 exclude = __init__.py
     manage.py
+    venv
